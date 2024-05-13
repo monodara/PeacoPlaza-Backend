@@ -9,6 +9,6 @@ namespace Server.Service.src.ServiceAbstract.AuthServiceAbstract;
 // }
 public interface IAuthService
 {
-    public Task<string> Login(UserCredential credential);
+    public Task<string> LoginAsync(UserCredential credential);
     public Task<UserReadDto> GetCurrentProfile(Guid id);
 }

@@ -119,7 +119,12 @@ namespace Server.Infrastructure.src.Repo
             var foundUser = await _context.Users.FirstOrDefaultAsync(user => user.Email == userCredential.Email && user.Password == userCredential.Password);
             return foundUser;
         }
+
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(user => user.Email == email);
+        }
     }
 }
 
-    
+

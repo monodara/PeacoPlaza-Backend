@@ -1,5 +1,6 @@
 ### Ignore unnecessary files in backend
 
+Migrations
 # User-specific files
 appsettings.json
 appsettings.*.json

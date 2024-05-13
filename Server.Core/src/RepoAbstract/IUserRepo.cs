@@ -6,6 +6,7 @@ namespace Server.Core.src.RepoAbstract
     public interface IUserRepo
     {
         Task<User> GetUserByIdAsync(Guid id);
+        Task<User> GetUserByEmailAsync(string email);
         Task<IEnumerable<User>> GetAllUsersAsync(QueryOptions options);
         Task<User> UpdateUserByIdAsync(User user);
         Task<bool> DeleteUserByIdAsync(Guid id);

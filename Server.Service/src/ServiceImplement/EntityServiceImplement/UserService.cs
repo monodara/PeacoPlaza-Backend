@@ -1,6 +1,7 @@
 using Server.Core.src.Common;
 using Server.Core.src.RepoAbstract;
 using Server.Service.src.DTO;
+using Server.Service.src.ServiceAbstract.AuthServiceAbstract;
 using Server.Service.src.ServiceAbstract.EntityServiceAbstract;
 using Server.Service.src.Shared;
 
@@ -9,10 +10,12 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
     public class UserService : IUserService
     {
         private readonly IUserRepo _userRepo;
+        private readonly IPasswordService _pwdService;
 
-        public UserService(IUserRepo userRepo)
+        public UserService(IUserRepo userRepo, IPasswordService pwdService)
         {
             _userRepo = userRepo;
+            _pwdService = pwdService;
         }
 
         public async Task<bool> CheckEmailAsync(string email)
@@ -25,23 +28,18 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
         //     var userToAdd = user.CreateCustomer();
         //     var addedUser = await _userRepo.CreateUserAsync(userToAdd);
         //     return new UserReadDto().Transform(addedUser);
-        // }
-        // public async Task<UserReadDto> CreateAdminAsync(UserCreateDto user)
-        // {
-        //     var userToAdd = user.CreateCustomer();
-        //     var addedUser = await _userRepo.CreateUserAsync(userToAdd);
-        //     return new UserReadDto().Transform(addedUser);
-        // }
+        // 
 
-        public async Task<UserReadDto> CreateCustomerAsync(UserCreateDto user)
+        public async Task<UserReadDto> CreateCustomerAsync(UserCreateDto userCreateDto)
         {
-            var isEmailAvailable = await _userRepo.CheckEmailAsync(user.Email);
+            var isEmailAvailable = await _userRepo.CheckEmailAsync(userCreateDto.Email);
             if (!isEmailAvailable)
             {
                 throw new ValidationException("Email has been registered. Maybe try to login...");
             }
-            PasswordService.HashPassword(user.Password, out string hashedPassword, out byte[] salt);
-            var userToAdd = user.CreateCustomer(hashedPassword, salt);
+            var userToAdd = userCreateDto.CreateCustomer();
+            userToAdd.Password = _pwdService.HashPassword(userCreateDto.Password, out byte[] salt);
+            userToAdd.Salt = salt;
             var addedUser = await _userRepo.CreateUserAsync(userToAdd);
             return new UserReadDto().Transform(addedUser);
         }

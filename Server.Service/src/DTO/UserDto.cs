@@ -54,9 +54,9 @@ namespace Server.Service.src.DTO
             Password = password;
         }
 
-        public User CreateCustomer(string hashedPassword, byte[] salt)
+        public User CreateCustomer()
         {
-            return new User(UserName, Email, hashedPassword, salt, Role.Customer);
+            return new User(UserName, Email, Password, Role.Customer);
         }
         // public User CreateAdmin()
         // {
