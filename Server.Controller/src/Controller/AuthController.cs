@@ -19,6 +19,6 @@ public class AuthController : ControllerBase
     public async Task<string> LoginAsync([FromBody] UserCredential userCredential)
     {
         // return await _authService.LoginAsync(userCredential);
-        return await _authService.Login(userCredential);
+        return await _authService.LoginAsync(userCredential);
     }
 }

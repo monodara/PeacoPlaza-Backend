@@ -8,43 +8,19 @@ using Server.Service.src.Shared;
 
 namespace Server.Service.src.ServiceImplement.AuthServiceImplement;
 
-// public class AuthService : IAuthService
-// {
-//     private readonly IUserRepo _userRepo;
-//     private readonly ITokenService _tokenService;
-//     public AuthService(IUserRepo userRepo, ITokenService tokenService)
-//     {
-//         _userRepo = userRepo;
-//         _tokenService = tokenService;
-//     }
-//     public async Task<string> LoginAsync(UserCredential userCedential)
-//     {
-//         User foundUser = await _userRepo.GetUserByCredentialsAsync(userCedential);
-//         Console.WriteLine("Auth Service: " + foundUser);
-
-//         if (foundUser == null)
-//         {
-//             throw new UnauthorizedAccessException("Invalid Credentials");
-//         }
-
-//         Console.WriteLine("Auth Service Before calling token: ");
-
-
-//         return _tokenService.GetToken(foundUser);
-//     }
-// }
-
 public class AuthService : IAuthService
 {
-    private IUserRepo _userRepo;
-    private ITokenService _tokenService;
-    private IMapper _mapper;
+    private readonly IUserRepo _userRepo;
+    private readonly ITokenService _tokenService;
+    private readonly IPasswordService _pwdService;
+    private readonly IMapper _mapper;
 
-    public AuthService(IUserRepo userRepo, ITokenService tokenService, IMapper mapper)
+    public AuthService(IUserRepo userRepo, ITokenService tokenService, IMapper mapper, IPasswordService pwdService)
     {
         _userRepo = userRepo;
         _tokenService = tokenService;
         _mapper = mapper;
+        _pwdService = pwdService;
     }
 
     public async Task<UserReadDto> GetCurrentProfile(Guid id)
@@ -57,19 +33,20 @@ public class AuthService : IAuthService
         throw CustomException.NotFoundException("User not found");
     }
 
-    public async Task<string> Login(UserCredential credential)
+    public async Task<string> LoginAsync(UserCredential credential)
     {
-        var foundByEmail = await _userRepo.GetUserByCredentialsAsync(credential);
+
+        var foundByEmail = await _userRepo.GetUserByEmailAsync(credential.Email);
         if (foundByEmail is null)
         {
-            throw CustomException.NotFoundException("Email not found");
+            throw CustomException.NotFoundException("Email hasn't been registered.");
         }
-        var isPasswordMatch = PasswordService.VerifyPassword(credential.Password, foundByEmail.Password, foundByEmail.Salt);
+        var isPasswordMatch = _pwdService.VerifyPassword(credential.Password, foundByEmail.Password, foundByEmail.Salt);
         if (isPasswordMatch)
         {
             return _tokenService.GetToken(foundByEmail);
         }
-        throw CustomException.UnauthorizedException("Password incorrect");
+        throw CustomException.UnauthorizedException("Password incorrect.");
     }
 }
 

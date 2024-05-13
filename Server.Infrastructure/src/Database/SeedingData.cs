@@ -1,5 +1,6 @@
 using Server.Core.src.Entity;
 using Server.Core.src.ValueObject;
+using Server.Service.src.ServiceAbstract.AuthServiceAbstract;
 using Server.Service.src.Shared;
 
 namespace Server.Infrastructure.src.Database;
@@ -7,6 +8,7 @@ namespace Server.Infrastructure.src.Database;
 public class SeedingData
 {
     private static Random random = new Random();
+    private static IPasswordService pwdService = new PasswordService();
 
     private static Category category1 = new Category("Electronics", $"https://picsum.photos/200/?random={random.Next(10)}");
     private static Category category2 = new Category("Clothing", $"https://picsum.photos/200/?random={random.Next(10)}");
@@ -24,6 +26,7 @@ public class SeedingData
         };
     }
 
+
     private static List<Product> GenerateProductsForCategory(Category category, int count)
     {
         var products = new List<Product>();
@@ -37,7 +40,6 @@ public class SeedingData
                 random.Next(1, 10) / 10M,               // weight
                 category.Id
             );
-
             products.Add(product);
         }
         return products;
@@ -66,13 +68,10 @@ public class SeedingData
             for (int i = 0; i < 3; i++)
             {
                 var productImage = new ProductImage
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    Url = $"https://picsum.photos/200/?random={random.Next(100, 1000)}",
-                    ProductId = product.Id
-                };
+                (
+                    $"https://picsum.photos/200/?random={random.Next(100, 1000)}",
+                    product.Id
+                );
                 productImages.Add(productImage);
             }
         }
@@ -81,68 +80,69 @@ public class SeedingData
 
     public static List<User> GetUsers()
     {
-        PasswordService.HashPassword("SuperAdmin1234", out string hashedPassword, out byte[] salt);
-        return new List<User>
-        {
-            new User(
-                "John",
-                "john.doe@mail.com",
-                hashedPassword,
-                salt,
-                Role.Admin
-            ),
-            new User(
-                "customer_1",
-                "customer_1@mail.com",
-                hashedPassword,
-                salt
-            )
-        };
+        var users = new List<User>();
+        var user1 = new User("DemoAdmin", "demo.admin@mail.com", "SuperAdmin1234", Role.Admin);
+        user1.Password = pwdService.HashPassword(user1.Password, out byte[] salt1);
+        user1.Salt = salt1;
+        users.Add(user1);
+        var user2 = new User("DemoCustomer", "customer_1@mail.com", "Password1234");
+        user2.Password = pwdService.HashPassword(user2.Password, out byte[] salt2);
+        user2.Salt = salt2;
+        users.Add(user2);
+        return users;
     }
     public static List<User> Users = GetUsers();
 
     public static List<Address> GetAddresses()
     {
         var user = Users[1];
-        return new List<Address>{
-            new Address(
+        var address = new Address(
                 "41C", "Asemakatu", "Pori", "Finland", "61200", "4198767000", "John", "Mull", "K-market",
                 user.Id
-            )
-        };
+            );
+        return [
+            address
+        ];
     }
     public static List<Address> Addresses = GetAddresses();
 
     public static List<Wishlist> GetWishlists()
     {
-        return new List<Wishlist>{
-            new Wishlist("My wishlist 1", Users[1].Id)
-        };
+        var wishlists = new List<Wishlist>();
+
+        foreach (var user in Users)
+        {
+            var wishlist = new Wishlist($"Example wishlist for {user.UserName}", user.Id);
+            wishlists.Add(wishlist);
+        }
+
+        return wishlists;
     }
     public static List<Wishlist> Wishlists = GetWishlists();
 
     public static List<WishlistItem> GetWishlistItems()
     {
-        return new List<WishlistItem>{
-            new WishlistItem(Products[0].Id, Wishlists[0].Id)
-        };
+        var wishlistItem = new WishlistItem(Products[0].Id, Wishlists[0].Id);
+        return [
+            wishlistItem
+        ];
     }
     public static List<Order> GetOrders()
     {
-        return new List<Order>{
-            new Order(Users[1].Id, Addresses[0].Id)
-        };
+        var order = new Order(Users[1].Id, Addresses[0].Id);
+        return [
+            order
+        ];
     }
     public static List<Order> Orders = GetOrders();
     public static List<OrderProduct> GetOrderProducts()
     {
-        return new List<OrderProduct>{
-            new OrderProduct(Orders[0].Id,Products[0].Id, 3),
-            new OrderProduct(Orders[0].Id,Products[1].Id, 1)
-        };
+        var orderProducts = new List<OrderProduct>();
+        var orderProduct1 = new OrderProduct(Orders[0].Id, Products[0].Id, 3);
+        var orderProduct2 = new OrderProduct(Orders[0].Id, Products[1].Id, 1);
+        orderProducts.Add(orderProduct1);
+        orderProducts.Add(orderProduct2);
+        return orderProducts;
     }
     public static List<OrderProduct> OrderProducts = GetOrderProducts();
-    
-
-
 }

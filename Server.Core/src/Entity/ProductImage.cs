@@ -10,4 +10,10 @@ public class ProductImage : BaseEntity
     public Product Product { get; set; }
     [Required(ErrorMessage = "Product image url is required")]
     public string Url { get; set; }
+    public ProductImage(string url, Guid productId)
+    {
+        Id = Guid.NewGuid();
+        Url = url;
+        ProductId = productId;
+    }
 }

@@ -22,7 +22,6 @@ public class AppDbContext : DbContext
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-
     }
 
     static AppDbContext()
@@ -53,9 +52,6 @@ public class AppDbContext : DbContext
         {
             e.HasData(SeedingData.Products);
             e.HasIndex(p => p.Name).IsUnique();
-            e.HasMany(p => p.Images) // Product has many ProductImage
-            .WithOne()              // ProductImage bonds to one Product
-            .HasForeignKey(pi => pi.ProductId); // foreign key
         });
         // -----------------------------------------------------------------------------------------------
         modelBuilder.Entity<ProductImage>(e =>
@@ -74,10 +70,13 @@ public class AppDbContext : DbContext
             entity.HasData(SeedingData.Wishlists);
         });
         // -----------------------------------------------------------------------------------------------
-        modelBuilder.Entity<Wishlist>(entity =>
+        modelBuilder.Entity<WishlistItem>(entity =>
         {
-            entity.HasIndex(wl => new { wl.Name, wl.UserId }).IsUnique();
-            entity.HasData(SeedingData.Wishlists);
+            entity.HasData(SeedingData.GetWishlistItems());
+        });
+        modelBuilder.Entity<Address>(entity =>
+        {
+            entity.HasData(SeedingData.GetAddresses());
         });
 
 

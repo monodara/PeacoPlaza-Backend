@@ -11,7 +11,6 @@ public class Product : BaseEntity
     public decimal Price { get; set; }
     [Required(ErrorMessage = "Product description is required")]
     public string Description { get; set; }
-    public IEnumerable<ProductImage> Images { get; set; }
     [Required(ErrorMessage = "Product inventory is required")]
     [Range(0, Int32.MaxValue, ErrorMessage = "Inventory must be larger than or equal to 0")]
     public int Inventory { get; set; }
@@ -24,12 +23,12 @@ public class Product : BaseEntity
     public IEnumerable<ProductImage> ProductImages { get; set; }
     public Product(string name, decimal price, string description, int inventory, decimal weight, Guid categoryId)
     {
+        Id = Guid.NewGuid();
         Name = name;
         Price = price;
         Description = description;
         Inventory = inventory;
         Weight = weight;
         CategoryId = categoryId;
-        // Category = category;
     }
 }
