@@ -24,20 +24,18 @@ namespace Server.Service.src.DTO
 
     public class UserUpdateDto
     {
-        public Guid Id { get; set; }
         public string UserName { get; set; }
-        public string Password { get; private set; }
-        public UserUpdateDto(Guid id, string userName = null, string password = null)
+        public string Password { get; set; }
+        public UserUpdateDto(string userName = null, string password = null)
         {
-            Id = id;
             UserName = userName;
             Password = password;
         }
 
         public User UpdateUser(User oldUser)
         {
-            if (UserName is not null) oldUser.UserName = UserName;
-            if (Password is not null) oldUser.Password = Password;
+            if (!string.IsNullOrEmpty(UserName)) oldUser.UserName = UserName;
+            if (!string.IsNullOrEmpty(Password)) oldUser.Password = Password;
             return oldUser;
         }
     }

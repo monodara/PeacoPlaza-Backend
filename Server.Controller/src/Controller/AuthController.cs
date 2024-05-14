@@ -18,7 +18,6 @@ public class AuthController : ControllerBase
     [HttpPost("api/v1/auth/login")]
     public async Task<string> LoginAsync([FromBody] UserCredential userCredential)
     {
-        // return await _authService.LoginAsync(userCredential);
         return await _authService.LoginAsync(userCredential);
     }
 }

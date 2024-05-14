@@ -16,7 +16,7 @@ namespace Server.Infrastructure.src.Repo
         {
             _context = context;
         }
-        public async Task<bool> ChangePasswordAsync(Guid userId, string newPassword)
+        public async Task<bool> ChangePasswordAsync(Guid userId, string newPassword, byte[] salt)
         {
             var user = await GetUserByIdAsync(userId);
 
@@ -26,6 +26,7 @@ namespace Server.Infrastructure.src.Repo
             }
             // Update the user's password
             user.Password = newPassword;
+            user.Salt = salt;
             // Save the changes to the database
             await _context.SaveChangesAsync();
             return true;
@@ -33,7 +34,7 @@ namespace Server.Infrastructure.src.Repo
 
         public async Task<bool> CheckEmailAsync(string email)
         {
-            return await _context.Users.AnyAsync(u => u.Email == email);
+            return !await _context.Users.AnyAsync(u => u.Email == email);
         }
 
         public async Task<User> CreateUserAsync(User user)
@@ -102,10 +103,6 @@ namespace Server.Infrastructure.src.Repo
             {
                 return null;
             }
-
-            userToUpdate.UserName = UserUpdateInfo.UserName;
-            userToUpdate.Password = UserUpdateInfo.Password;
-            // Or -- ???
             _context.Users.Update(UserUpdateInfo);
 
             // Save changes to the database

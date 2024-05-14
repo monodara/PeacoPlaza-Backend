@@ -35,7 +35,6 @@ public class AuthService : IAuthService
 
     public async Task<string> LoginAsync(UserCredential credential)
     {
-
         var foundByEmail = await _userRepo.GetUserByEmailAsync(credential.Email);
         if (foundByEmail is null)
         {

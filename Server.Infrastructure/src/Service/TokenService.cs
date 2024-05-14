@@ -14,7 +14,7 @@ public class TokenService : ITokenService
 
     public TokenService(IConfiguration configuration)
     {
-        configuration = _configuration;
+        _configuration = configuration;
     }
     public string GetToken(User foundUser)
     {
@@ -53,9 +53,10 @@ public class TokenService : ITokenService
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddDays(7),
             SigningCredentials = securityKey,
-            Issuer = "webdemo.com"
+            Issuer = "PeacoPlaza.com"
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
+        Console.WriteLine(token);
         return tokenHandler.WriteToken(token);
     }
 }

@@ -73,10 +73,14 @@ namespace Server.Controller.src.Controller
 
         [Authorize]
         [HttpPatch("{id}")]
-        public async Task<UserReadDto> UpdateUserByIdAsync([FromBody] UserUpdateDto user)
+        public async Task<UserReadDto> UpdateUserByIdAsync([FromRoute] string id, [FromBody] UserUpdateDto userUpdateDto)
         {
+            if (!Guid.TryParse(id, out Guid userId))
+            {
+                throw new ArgumentException("Invalid user ID format.");
+            }
             var userClaims = (_httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new InvalidOperationException("Please login to use this facility!");
-            return await _userService.UpdateUserByIdAsync(user);
+            return await _userService.UpdateUserByIdAsync(userId, userUpdateDto);
         }
         [Authorize]
         [HttpPatch("change_password")]

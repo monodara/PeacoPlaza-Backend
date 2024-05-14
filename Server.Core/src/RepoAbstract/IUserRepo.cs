@@ -11,7 +11,7 @@ namespace Server.Core.src.RepoAbstract
         Task<User> UpdateUserByIdAsync(User user);
         Task<bool> DeleteUserByIdAsync(Guid id);
         Task<User> CreateUserAsync(User user);
-        Task<bool> ChangePasswordAsync(Guid userId, string newPassword);
+        Task<bool> ChangePasswordAsync(Guid userId, string newPassword, byte[] salt);
         Task<bool> CheckEmailAsync(string email);
         Task<User> GetUserByCredentialsAsync(UserCredential userCredential);
 

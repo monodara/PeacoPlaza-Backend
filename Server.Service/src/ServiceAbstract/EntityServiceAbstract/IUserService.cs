@@ -7,7 +7,7 @@ namespace Server.Service.src.ServiceAbstract.EntityServiceAbstract
     {
         Task<UserReadDto> GetUserByIdAsync(Guid id);
         Task<IEnumerable<UserReadDto>> GetAllUsersAsync(QueryOptions options);
-        Task<UserReadDto> UpdateUserByIdAsync(UserUpdateDto user);
+        Task<UserReadDto> UpdateUserByIdAsync(Guid userId, UserUpdateDto user);
         Task<bool> DeleteUserByIdAsync(Guid id);
         Task<UserReadDto> CreateCustomerAsync(UserCreateDto user);
         // Task<UserReadDto> CreateAdminAsync(UserCreateDto user);

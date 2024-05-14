@@ -33,10 +33,15 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
         public async Task<UserReadDto> CreateCustomerAsync(UserCreateDto userCreateDto)
         {
             var isEmailAvailable = await _userRepo.CheckEmailAsync(userCreateDto.Email);
+            Console.WriteLine(userCreateDto.Email);
+            Console.WriteLine(isEmailAvailable);
             if (!isEmailAvailable)
             {
                 throw new ValidationException("Email has been registered. Maybe try to login...");
             }
+            Console.WriteLine(userCreateDto.Email);
+            Console.WriteLine(userCreateDto.Password);
+            Console.WriteLine(userCreateDto.UserName);
             var userToAdd = userCreateDto.CreateCustomer();
             userToAdd.Password = _pwdService.HashPassword(userCreateDto.Password, out byte[] salt);
             userToAdd.Salt = salt;
@@ -76,9 +81,9 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             return new UserReadDto().Transform(user);
         }
 
-        public async Task<UserReadDto> UpdateUserByIdAsync(UserUpdateDto user)
+        public async Task<UserReadDto> UpdateUserByIdAsync(Guid userId, UserUpdateDto user)
         {
-            var userToUpdate = await _userRepo.GetUserByIdAsync(user.Id);
+            var userToUpdate = await _userRepo.GetUserByIdAsync(userId);
             if (userToUpdate == null)
             {
                 throw new ResourceNotFoundException("No user found to update.");
@@ -98,7 +103,9 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             {
                 throw new ResourceNotFoundException("No user found by this id.");
             }
-            return await _userRepo.ChangePasswordAsync(id, password);
+            //hash password
+            var hashedPwd = _pwdService.HashPassword(password, out byte[] salt);
+            return await _userRepo.ChangePasswordAsync(id, hashedPwd, salt);
         }
     }
 }
