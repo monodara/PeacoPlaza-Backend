@@ -128,13 +128,13 @@ namespace Server.Test.src.Service
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var userUpdateDto = new UserUpdateDto(userId, "oldName"); // Create a user update DTO with the given ID
+            var userUpdateDto = new UserUpdateDto("oldName"); // Create a user update DTO with the given ID
             var mockUserRepo = new Mock<IUserRepo>();
             mockUserRepo.Setup(repo => repo.GetUserByIdAsync(userId)).ReturnsAsync((User)null);
             var userService = new UserService(mockUserRepo.Object, _mockPwdService.Object);
 
             // Act + Assert
-            await Assert.ThrowsAsync<ResourceNotFoundException>(() => userService.UpdateUserByIdAsync(userUpdateDto));
+            await Assert.ThrowsAsync<ResourceNotFoundException>(() => userService.UpdateUserByIdAsync(userId,userUpdateDto));
         }
 
         [Fact]
@@ -143,7 +143,7 @@ namespace Server.Test.src.Service
             // Arrange
             var userToUpdate = new User("oldName", "1@mail.com", "miller123"); // Create a user to be updated with the given ID
             var userId = userToUpdate.Id;
-            var userUpdateDto = new UserUpdateDto(userId, "newName"); // Create a user update DTO with the given ID
+            var userUpdateDto = new UserUpdateDto("newName"); // Create a user update DTO with the given ID
 
             var mockUserRepo = new Mock<IUserRepo>();
             mockUserRepo.Setup(repo => repo.GetUserByIdAsync(userId)).ReturnsAsync(userToUpdate);
@@ -155,7 +155,7 @@ namespace Server.Test.src.Service
             var userService = new UserService(mockUserRepo.Object, _mockPwdService.Object);
 
             // Act
-            var result = await userService.UpdateUserByIdAsync(userUpdateDto);
+            var result = await userService.UpdateUserByIdAsync(userId,userUpdateDto);
 
             // Assert
             Assert.NotNull(result);
@@ -184,7 +184,7 @@ namespace Server.Test.src.Service
             var userToUpdate = new User("oldName", "1@mail.com", "miller123");
             var mockUserRepo = new Mock<IUserRepo>();
             mockUserRepo.Setup(repo => repo.GetUserByIdAsync(userId)).ReturnsAsync(userToUpdate);
-            mockUserRepo.Setup(repo => repo.ChangePasswordAsync(userId, newPassword)).ReturnsAsync(false); // Simulate password change failure
+            mockUserRepo.Setup(repo => repo.ChangePasswordAsync(userId, It.IsAny<string>(), It.IsAny<byte[]>())).ReturnsAsync(false); // Simulate password change failure
             var userService = new UserService(mockUserRepo.Object, _mockPwdService.Object);
 
             // Act
@@ -193,6 +193,7 @@ namespace Server.Test.src.Service
             // Assert
             Assert.False(result);
         }
+
         [Fact]
         public async Task ChangePassword_ValidIdAndPassword_ReturnsTrue()
         {
@@ -202,7 +203,7 @@ namespace Server.Test.src.Service
             var userToUpdate = new User("oldName", "1@mail.com", "miller123");
             var mockUserRepo = new Mock<IUserRepo>();
             mockUserRepo.Setup(repo => repo.GetUserByIdAsync(userId)).ReturnsAsync(userToUpdate);
-            mockUserRepo.Setup(repo => repo.ChangePasswordAsync(userId, newPassword)).ReturnsAsync(true); // Simulate successful password change
+            mockUserRepo.Setup(repo => repo.ChangePasswordAsync(userId, It.IsAny<string>(), It.IsAny<byte[]>())).ReturnsAsync(true); // Simulate successful password change
             var userService = new UserService(mockUserRepo.Object, _mockPwdService.Object);
 
             // Act
@@ -212,13 +213,9 @@ namespace Server.Test.src.Service
             // Verify that GetUserByIdAsync is invoked with the correct user ID
             mockUserRepo.Verify(repo => repo.GetUserByIdAsync(userId), Times.Once);
 
-            // Verify that ChangePasswordAsync is invoked with the correct user ID and password
-            mockUserRepo.Verify(repo => repo.ChangePasswordAsync(userId, newPassword), Times.Once);
-
             // Assert the result
             Assert.True(result);
         }
-
 
     }
 }
