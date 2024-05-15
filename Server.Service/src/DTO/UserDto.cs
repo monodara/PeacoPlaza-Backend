@@ -25,17 +25,17 @@ namespace Server.Service.src.DTO
     public class UserUpdateDto
     {
         public string UserName { get; set; }
-        public string Password { get; set; }
-        public UserUpdateDto(string userName = null, string password = null)
+        // public string Password { get; set; }
+        public UserUpdateDto(string userName)
         {
             UserName = userName;
-            Password = password;
+            // Password = password;
         }
 
         public User UpdateUser(User oldUser)
         {
             if (!string.IsNullOrEmpty(UserName)) oldUser.UserName = UserName;
-            if (!string.IsNullOrEmpty(Password)) oldUser.Password = Password;
+            // if (!string.IsNullOrEmpty(Password)) oldUser.Password = Password;
             return oldUser;
         }
     }

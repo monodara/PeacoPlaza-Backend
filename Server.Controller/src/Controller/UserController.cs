@@ -14,13 +14,13 @@ namespace Server.Controller.src.Controller
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        // private readonly IHttpContextAccessor _httpContextAccessor;
 
 
-        public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor)
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _httpContextAccessor = httpContextAccessor;
+            // _httpContextAccessor = httpContextAccessor;
 
         }
         [Authorize(Roles = "Admin")]
@@ -32,7 +32,7 @@ namespace Server.Controller.src.Controller
                 throw new InvalidOperationException("Please login to use this facility!");
             }
 
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userClaims = HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (userClaims == null)
             {
@@ -44,7 +44,7 @@ namespace Server.Controller.src.Controller
         [HttpGet("{id}")]
         public async Task<UserReadDto> GetUserByIdAsync([FromRoute] Guid id)
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userClaims = HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
             return await _userService.GetUserByIdAsync(id);
         }
@@ -66,27 +66,23 @@ namespace Server.Controller.src.Controller
         [HttpDelete("{id}")]
         public async Task<bool> DeleteUserByIdAsync([FromRoute] Guid id)
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userClaims = HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
             return await _userService.DeleteUserByIdAsync(id);
         }
 
         [Authorize]
         [HttpPatch("{id}")]
-        public async Task<UserReadDto> UpdateUserByIdAsync([FromRoute] string id, [FromBody] UserUpdateDto userUpdateDto)
+        public async Task<UserReadDto> UpdateUserByIdAsync([FromRoute] Guid id, [FromBody] UserUpdateDto userUpdateDto)
         {
-            if (!Guid.TryParse(id, out Guid userId))
-            {
-                throw new ArgumentException("Invalid user ID format.");
-            }
-            var userClaims = (_httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new InvalidOperationException("Please login to use this facility!");
-            return await _userService.UpdateUserByIdAsync(userId, userUpdateDto);
+            var userClaims = (HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new InvalidOperationException("Please login to use this facility!");
+            return await _userService.UpdateUserByIdAsync(id, userUpdateDto);
         }
         [Authorize]
         [HttpPatch("change_password")]
         public async Task<bool> ChangePassword([FromBody] string newPassword)
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userClaims = HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
             var userId = Guid.Parse(userClaims);
             return await _userService.ChangePassword(userId, newPassword);
