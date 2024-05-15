@@ -37,13 +37,13 @@ namespace Server.Test.src.Service
             // Arrange
             var addressToUpdate = new Address("41C", "Asemakatu", "Pori", "Finland", "61200", "4198767000", "John", "Mull", "K-market", user.Id);
             var addressId = addressToUpdate.Id;
-            var addressUpdateDto = new AddressUpdateDto(addressId, "41C", "Asemakatu", "Pori", "Finland", "61200", "4198767000", "John", "Mull", "K-market");
+            var addressUpdateDto = new AddressUpdateDto("41C", "Asemakatu", "Pori", "Finland", "61200", "4198767000", "John", "Mull", "K-market");
             var mockAddressRepo = new Mock<IAddressRepo>();
             mockAddressRepo.Setup(repo => repo.GetAddressByIdAsync(addressId)).ReturnsAsync((Address)null);
             var addressService = new AddressService(mockAddressRepo.Object);
 
             // Act + Assert
-            await Assert.ThrowsAsync<ResourceNotFoundException>(() => addressService.UpdateAddressByIdAsync(addressUpdateDto));
+            await Assert.ThrowsAsync<ResourceNotFoundException>(() => addressService.UpdateAddressByIdAsync(addressId, addressUpdateDto));
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace Server.Test.src.Service
             // Arrange
             var defaultAddress = new Address("41C", "Asemakatu", "Pori", "Finland", "61200", "4198767000", "John", "Mull", "K-market", user.Id);
             var mockAddressRepo = new Mock<IAddressRepo>();
-            mockAddressRepo.Setup(repo => repo.GetAddressByIdAsync(defaultAddress.Id)).ReturnsAsync(defaultAddress);
+            mockAddressRepo.Setup(repo => repo.GetDefaultAddressAsync(user.Id)).ReturnsAsync(defaultAddress);
 
             user.DefaultAddressId = defaultAddress.Id; // Set default address ID for the user
             var addressService = new AddressService(mockAddressRepo.Object);
