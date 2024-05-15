@@ -28,6 +28,8 @@ builder.Services.AddSwaggerGen();
 //add all controllers
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
+// Add logging configuration
+builder.Logging.AddConsole();
 
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("DbConn"));
 dataSourceBuilder.MapEnum<Role>();
@@ -103,11 +105,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     }
 );
 // add authorization
-builder.Services.AddAuthorization(
-    policy=>{
-        policy.AddPolicy("ResourceOwner", policy=>policy.Requirements.Add(new VerifyResourceOwnerRequirement()));
-    }
-);
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ResourceOwner", policy =>
+    {
+        policy.Requirements.Add(new VerifyResourceOwnerRequirement());
+    });
+});
 // add automapper dependency injection
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 

@@ -13,6 +13,8 @@ namespace Server.Service.src.DTO
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Landmark { get; set; }
+        public Guid UserId { get; set; }
+
 
         public AddressReadDto Transform(Address address)
         {
@@ -25,6 +27,7 @@ namespace Server.Service.src.DTO
             PhoneNumber = address.PhoneNumber;
             Landmark = address.Landmark;
             AddressLine = address.AddressLine;
+            UserId = address.UserId;
             return this;
         }
     }

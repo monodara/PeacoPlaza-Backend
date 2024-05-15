@@ -14,21 +14,19 @@ namespace Server.Controller.src.Controller
     public class AddressController : ControllerBase
     {
         private readonly IAddressService _addressService;
-        // private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAuthorizationService _authorizationService;
 
 
         public AddressController(IAddressService addressService,  IAuthorizationService authorizationService)
         {
             _addressService = addressService;
-            // _httpContextAccessor = httpContextAccessor;
             _authorizationService = authorizationService;
         }
         [Authorize]
         [HttpGet] 
         public async Task<IEnumerable<AddressReadDto>> GetAddressesByUserAsync([FromQuery] QueryOptions options)
         {
-            var userClaims = HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
             var userId = Guid.Parse(userClaims);
             return await _addressService.GetAddressesByUserAsync(userId, options);
@@ -38,7 +36,10 @@ namespace Server.Controller.src.Controller
         public async Task<AddressReadDto> GetAddressByIdAsync([FromRoute] Guid id)
         {
             var address = await _addressService.GetAddressByIdAsync(id);
+            Console.WriteLine(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            Console.WriteLine(address.UserId);
             var authorizationResult = await _authorizationService.AuthorizeAsync(HttpContext.User, address, "ResourceOwner");
+            Console.WriteLine(authorizationResult.Succeeded);
             if (authorizationResult.Succeeded){
                 return address;
             }
