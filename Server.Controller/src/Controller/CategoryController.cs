@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Core.src.Common;
 using Server.Service.src.DTO;
@@ -6,6 +7,7 @@ using Server.Service.src.ServiceAbstract.EntityServiceAbstract;
 namespace Server.Controller.src.Controller
 {
     [ApiController]
+    [Route("api/v1/categories")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryServices;
@@ -15,37 +17,31 @@ namespace Server.Controller.src.Controller
             _categoryServices = categoryService;
         }
 
-        [HttpGet("api/v1/categories")] 
+        [HttpGet]
         public async Task<IEnumerable<CategoryReadDTO>> GetAllCategoriesAsync([FromQuery] QueryOptions options)
         {
-            Console.WriteLine("GetAllCategoriesAsync");
-            try
-            {
-                return await _categoryServices.GetAllCategoriesAsync(options);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return await _categoryServices.GetAllCategoriesAsync(options);
         }
 
-        [HttpGet("api/v1/category/{id}")] 
+        [HttpGet("{id}")]
         public async Task<CategoryReadDTO> GetCategoryByIdAsync([FromRoute] Guid id)
         {
             return await _categoryServices.GetCategoryById(id);
         }
-
-        [HttpPost("api/v1/category/{id}")] 
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
         public async Task<CategoryReadDTO> CreateCategoryAsync([FromBody] CategoryCreateDTO category)
         {
             return await _categoryServices.CreateCategory(category);
         }
-        [HttpPatch("api/v1/category/{id}")] 
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{id}")]
         public async Task<CategoryReadDTO> UpdateCategoryAsync([FromRoute] Guid id, [FromBody] CategoryUpdateDTO category)
         {
             return await _categoryServices.UpdateCategory(id, category);
         }
-        [HttpDelete("api/v1/category/{id}")] 
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
         public async Task<bool> DeleteCategoryAsync([FromRoute] Guid id)
         {
             return await _categoryServices.DeleteCategory(id);

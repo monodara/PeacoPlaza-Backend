@@ -36,7 +36,9 @@ namespace Server.Service.src.ServiceImplement.AuthServiceImplement
         }
         public async Task<CategoryReadDTO> CreateCategory(CategoryCreateDTO category)
         {
-            var result = await _categoryRepo.CreateOneAsync(_mapper.Map<CategoryCreateDTO, Category>(category));
+            var categoryEntity = _mapper.Map<CategoryCreateDTO, Category>(category);
+            categoryEntity.ParentCategoryId = category.ParentCategoryId; // set ParentCategoryId property
+            var result = await _categoryRepo.CreateOneAsync(categoryEntity);
             return _mapper.Map<Category, CategoryReadDTO>(result);
         }
         async Task<CategoryReadDTO> ICategoryService.UpdateCategory(Guid id, CategoryUpdateDTO category)
