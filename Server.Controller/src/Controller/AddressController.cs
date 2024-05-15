@@ -14,20 +14,21 @@ namespace Server.Controller.src.Controller
     public class AddressController : ControllerBase
     {
         private readonly IAddressService _addressService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        // private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAuthorizationService _authorizationService;
 
 
-        public AddressController(IAddressService addressService, IHttpContextAccessor httpContextAccessor)
+        public AddressController(IAddressService addressService,  IAuthorizationService authorizationService)
         {
             _addressService = addressService;
-            _httpContextAccessor = httpContextAccessor;
+            // _httpContextAccessor = httpContextAccessor;
+            _authorizationService = authorizationService;
         }
         [Authorize]
-        [HttpGet] // define endpoint: /addresses?
+        [HttpGet] 
         public async Task<IEnumerable<AddressReadDto>> GetAddressesByUserAsync([FromQuery] QueryOptions options)
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
+            var userClaims = HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
             var userId = Guid.Parse(userClaims);
             return await _addressService.GetAddressesByUserAsync(userId, options);
@@ -36,15 +37,18 @@ namespace Server.Controller.src.Controller
         [HttpGet("{id}")]
         public async Task<AddressReadDto> GetAddressByIdAsync([FromRoute] Guid id)
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
-            return await _addressService.GetAddressByIdAsync(id);
+            var address = await _addressService.GetAddressByIdAsync(id);
+            var authorizationResult = await _authorizationService.AuthorizeAsync(HttpContext.User, address, "ResourceOwner");
+            if (authorizationResult.Succeeded){
+                return address;
+            }
+            throw new UnauthorizedAccessException("The address doesn't belong to you.");
         }
         [Authorize]
         [HttpPost]
         public async Task<AddressReadDto> CreateAddressAsync([FromBody] AddressCreateDto address)
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userClaims = HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
             var userId = Guid.Parse(userClaims);
             return await _addressService.CreateAddressAsync(userId, address);
@@ -53,23 +57,37 @@ namespace Server.Controller.src.Controller
         [HttpDelete("{id}")]
         public async Task<bool> DeleteAddressByIdAsync([FromRoute] Guid id)
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
-            return await _addressService.DeleteAddressByIdAsync(id);
+            // var userClaims = HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            // if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
+            // return await _addressService.DeleteAddressByIdAsync(id);
+            var address = await _addressService.GetAddressByIdAsync(id);
+            var authorizationResult = await _authorizationService.AuthorizeAsync(HttpContext.User, address, "ResourceOwner");
+            if (authorizationResult.Succeeded)
+            {
+                return await _addressService.DeleteAddressByIdAsync(id);
+            }
+            throw new UnauthorizedAccessException("The address doesn't belong to you.");
         }
         [Authorize]
         [HttpPatch("{id}")]
-        public async Task<AddressReadDto> UpdateAddressByIdAsync([FromBody] AddressUpdateDto address)
+        public async Task<AddressReadDto> UpdateAddressByIdAsync([FromRoute] Guid id, [FromBody] AddressUpdateDto addressUpdateDto)
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
-            return await _addressService.UpdateAddressByIdAsync(address);
+            // var userClaims = HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            // if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
+            // return await _addressService.UpdateAddressByIdAsync(address);
+            var address = await _addressService.GetAddressByIdAsync(id);
+            var authorizationResult = await _authorizationService.AuthorizeAsync(HttpContext.User, address, "ResourceOwner");
+            if (authorizationResult.Succeeded)
+            {
+                return await _addressService.UpdateAddressByIdAsync(addressUpdateDto);
+            }
+            throw new UnauthorizedAccessException("The address doesn't belong to you.");
         }
         [Authorize]
         [HttpPatch("{id}/set_default")]
         public async Task<bool> SetDefaultAddressAsync([FromRoute] Guid addressId)
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userClaims = HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");//unauthenticated
             var userId = Guid.Parse(userClaims);
             return await _addressService.SetDefaultAddressAsync(userId, addressId);
@@ -78,7 +96,7 @@ namespace Server.Controller.src.Controller
         [HttpGet("default")]
         public async Task<AddressReadDto> GetDefaultAddressAsync()
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userClaims = HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");//unauthenticated
             var userId = Guid.Parse(userClaims);
             return await _addressService.GetDefaultAddressAsync(userId);
