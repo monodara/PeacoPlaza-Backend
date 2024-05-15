@@ -6,7 +6,7 @@ using Server.Service.src.DTO;
 using Server.Service.src.ServiceAbstract.EntityServiceAbstract;
 using Server.Service.src.Shared;
 
-namespace Server.Service.src.ServiceImplement.AuthServiceImplement
+namespace Server.Service.src.ServiceImplement.EntityServiceImplement
 {
     public class CategoryService : ICategoryService
     {
