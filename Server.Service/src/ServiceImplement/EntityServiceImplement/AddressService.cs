@@ -65,9 +65,9 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             return isSet;
         }
 
-        public async Task<AddressReadDto> UpdateAddressByIdAsync(AddressUpdateDto address)
+        public async Task<AddressReadDto> UpdateAddressByIdAsync(Guid id, AddressUpdateDto address)
         {
-            var addressToUpdate = await _addressRepo.GetAddressByIdAsync(address.Id);
+            var addressToUpdate = await _addressRepo.GetAddressByIdAsync(id);
             if (addressToUpdate == null)
             {
                 throw new ResourceNotFoundException("No address found to update.");

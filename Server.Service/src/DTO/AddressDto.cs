@@ -64,7 +64,6 @@ namespace Server.Service.src.DTO
 
     public class AddressUpdateDto
     {
-        public Guid Id { get; set; }
         public string AddressLine { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
@@ -75,9 +74,8 @@ namespace Server.Service.src.DTO
         public string LastName { get; set; }
         public string Landmark { get; set; }
 
-        public AddressUpdateDto(Guid id, string addressLine, string street, string city, string country, string postcode, string phoneNumber, string firstName, string lastName, string landmark)
+        public AddressUpdateDto(string addressLine, string street, string city, string country, string postcode, string phoneNumber, string firstName, string lastName, string landmark)
         {
-            Id = id;
             AddressLine = addressLine;
             Street = street;
             City = city;
