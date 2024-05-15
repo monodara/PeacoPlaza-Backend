@@ -26,10 +26,12 @@ public class CategoryUpdateDTO
 {
     public string Name { get; set; }
     public string Image { get; set; }
+    public Guid? ParentCategoryId{ get; set; }
     public Category UpdateCategory(Category oldCate)
     {
-        oldCate.Name = Name;
-        oldCate.Image = Image;
+        if(string.IsNullOrEmpty(Name)) oldCate.Name = Name;
+        if (string.IsNullOrEmpty(Image)) oldCate.Image = Image;
+        oldCate.ParentCategoryId = ParentCategoryId;
         return oldCate;
     }
 }

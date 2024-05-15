@@ -43,9 +43,14 @@ namespace Server.Service.src.ServiceImplement.AuthServiceImplement
         }
         async Task<CategoryReadDTO> ICategoryService.UpdateCategory(Guid id, CategoryUpdateDTO category)
         {
+
             var foundItem = await _categoryRepo.GetOneByIdAsync(id);
             if (foundItem is not null)
             {
+                if (category.ParentCategoryId == null)
+                {
+                    foundItem.ParentCategoryId = null;
+                }
                 var result = await _categoryRepo.UpdateOneByIdAsync(_mapper.Map(category, foundItem));
                 return _mapper.Map<Category, CategoryReadDTO>(result);
             }
