@@ -29,20 +29,20 @@ public class CreateReviewDTO
     public string Comment { get; set; } = string.Empty;
     public DateTime ReviewDate { get; set; }
     public Guid UserId { get; set; }
-    public Guid OrderedProductId { get; set; }
+    public Guid OrderProductId { get; set; }
     public ReviewImage[]? ReviewImages { get; set; }
     public CreateReviewDTO(double rating, string comment, Guid userId, Guid orderdProductId, ReviewImage[] reviewsImage)
     {
         Rating = rating;
         Comment = comment;
         UserId = userId;
-        OrderedProductId = orderdProductId;
+        OrderProductId = orderdProductId;
         ReviewImages = reviewsImage;
 
     }
     public Review CreateReviews()
     {
-        return new Review(Rating, Comment, UserId, OrderedProductId);
+        return new Review(Rating, Comment, UserId, OrderProductId);
     }
 }
 

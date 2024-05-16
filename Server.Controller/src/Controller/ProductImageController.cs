@@ -19,7 +19,6 @@ namespace Server.Controller.src.Controller
         [HttpGet("/{productId}")]
         public async Task<IEnumerable<ProductImageReadDTO>> GetAllProductImagesAsync([FromQuery] QueryOptions options)
         {
-            Console.WriteLine("GetAllCategoriesAsync");
             try
             {
                 return await _productImageService.GetAllProductImagesAsync(options);

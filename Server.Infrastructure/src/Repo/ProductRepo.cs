@@ -12,7 +12,7 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
     private DbSet<OrderProduct> _orderProducts;
     public ProductRepo(AppDbContext context) : base(context)
     {
-        _orderProducts = context.OrderedProducts;
+        _orderProducts = context.OrderProducts;
     }
 
     public override async Task<IEnumerable<Product>> GetAllAsync(QueryOptions options)

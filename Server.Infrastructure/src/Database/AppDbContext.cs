@@ -11,7 +11,7 @@ public class AppDbContext : DbContext
     public DbSet<Wishlist> Wishlists { get; set; } // table `Wishlists` -> `wishlists`
     public DbSet<WishlistItem> WishlistItems { get; set; }
     public DbSet<Order> Orders { get; set; } // table `Orders` -> `orders`
-    public DbSet<OrderProduct> OrderedProducts { get; set; } // table `Orders` -> `orders`
+    public DbSet<OrderProduct> OrderProducts { get; set; } // table `Orders` -> `orders`
     public DbSet<Review> Reviews { get; set; } // table `Reviews` -> `reviews`
     public DbSet<ReviewImage> ReviewImages { get; set; } // table `Reviews` -> `reviews`
     public DbSet<Payment> Payments { get; set; } // table `Payment` -> `payment`
@@ -74,11 +74,21 @@ public class AppDbContext : DbContext
         {
             entity.HasData(SeedingData.GetWishlistItems());
         });
+        // -----------------------------------------------------------------------------------------------
         modelBuilder.Entity<Address>(entity =>
         {
-            entity.HasData(SeedingData.GetAddresses());
+            entity.HasData(SeedingData.Addresses);
         });
-
+        // -----------------------------------------------------------------------------------------------
+        modelBuilder.Entity<Order>(entity =>
+        {
+            entity.HasData(SeedingData.Orders);
+        });
+        // -----------------------------------------------------------------------------------------------
+        modelBuilder.Entity<OrderProduct>(entity =>
+        {
+            entity.HasData(SeedingData.OrderProducts);
+        });
 
         base.OnModelCreating(modelBuilder);
     }

@@ -56,7 +56,6 @@ public class TokenService : ITokenService
             Issuer = "PeacoPlaza.com"
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
-        Console.WriteLine(token);
         return tokenHandler.WriteToken(token);
     }
 }

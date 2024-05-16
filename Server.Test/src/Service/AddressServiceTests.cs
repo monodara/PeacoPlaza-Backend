@@ -79,8 +79,6 @@ namespace Server.Test.src.Service
 
             user.DefaultAddressId = defaultAddress.Id; // Set default address ID for the user
             var addressService = new AddressService(mockAddressRepo.Object);
-            Console.WriteLine(defaultAddress.Id);
-            Console.WriteLine(user.DefaultAddressId);
             // Act
             var result = await addressService.GetDefaultAddressAsync(user.Id);
 

@@ -15,19 +15,19 @@ public class Review : BaseEntity
     public Guid UserId { get; set; }
     public User User { get; set; }
     public DateTime ReviewDate { get; set; }
-    public Guid OrderedProductId { get; set; }
-    //public OrderProducts OrderedProduct { get; set; }
+    public Guid OrderProductId { get; set; }
+    //public OrderProducts OrderProduct { get; set; }
 
 
     //public IEnumerable<ReviewImages> Images { get; set; }
 
-    public Review(double rating, string comment, Guid userId, Guid orderedProductId)
+    public Review(double rating, string comment, Guid userId, Guid orderProductId)
     {
         Id = Guid.NewGuid();
         Rating = rating;
         Comment = comment;
         UserId = userId;
         ReviewDate = DateTime.Now;
-        OrderedProductId = orderedProductId;
+        OrderProductId = orderProductId;
     }
 }

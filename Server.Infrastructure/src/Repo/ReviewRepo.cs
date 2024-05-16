@@ -61,7 +61,7 @@ public class ReviewRepo : IReviewRepo
         var pgNo = options.PageNo;
         var pgSize = options.PageSize;
 
-        var orderedProductsIdList = await _context.OrderedProducts
+        var orderProductsIdList = await _context.OrderProducts
                                     .Where(op => op.ProductId == productId)
                                     .Select(op => op.Id)
                                     .Skip((pgNo - 1) * pgSize)
@@ -69,7 +69,7 @@ public class ReviewRepo : IReviewRepo
                                     .ToListAsync();
 
         var filteredOrderedReviews = await _context.Reviews
-                            .Where(r => orderedProductsIdList.Contains(r.OrderedProductId))
+                            .Where(r => orderProductsIdList.Contains(r.OrderProductId))
                             .ToListAsync();
 
         return filteredOrderedReviews;

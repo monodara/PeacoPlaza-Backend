@@ -4,64 +4,53 @@ using Server.Core.src.ValueObject;
 
 namespace Server.Service.src.DTO;
 
-public class ReadOrderDTO
+public class OrderReadDto
 {
     public Guid Id { get; set; }
     public DateTime OrderDate { get; set; }
     public Status Status { get; set; }
     public Guid UserId { get; set; }
     public DateTime? DateOfDelivery { get; set; }
+    public IEnumerable<OrderProduct> OrderProducts { get; set; }
 
-    public ReadOrderDTO ReadOrder(Order order)
+    public OrderReadDto ReadOrder(Order order)
     {
-        return new ReadOrderDTO
+        return new OrderReadDto
         {
             Id = order.Id,
             OrderDate = order.OrderDate,
             Status = order.Status,
             UserId = order.UserId,
-            DateOfDelivery = order.DateOfDelivery
+            DateOfDelivery = order.DateOfDelivery,
+            // OrderProducts = order.OrderProducts,
         };
     }
 }
-public class CreateOrderDTO
+public class OrderCreateDto
 {
-    public Guid UserId { get; set; }
+    // public Guid UserId { get; set; }
     public Guid AddressId { get; set; }
-    public Guid ProductId { get; set; }
-    public int Quantity { get; set; }
-    public List<ProductsList> ProductList { get; set; }
-    public CreateOrderDTO(Guid userId, Guid addressId, List<ProductsList> productsList)
-    {
-        UserId = userId;
-        AddressId = addressId;
-        ProductList = productsList;
-    }
+    // public List<ProductsList> ProductList { get; set; }
+    public IEnumerable<OrderProduct> OrderProducts { get; set; }
 
     public Order CreateOrder()
     {
-        return new Order(UserId, AddressId);
+        return new Order { AddressId = AddressId, OrderProducts = OrderProducts };
     }
 }
 public class UpdateOrderDTO
 {
     public Status Status { get; set; }
-    public DateTime DateOfDelivery { get; set; }
-
-    public UpdateOrderDTO(Status status, DateTime dateOfDelivery, Guid addressId)
+    public DateTime? DateOfDelivery { get; set; } = DateTime.Now;
+    public UpdateOrderDTO(Status status, DateTime dateOfDelivery)
     {
         Status = status;
         DateOfDelivery = dateOfDelivery;
     }
-
     public Order UpdateOrder(Order oldOrder)
     {
-        if (oldOrder == null) throw new ArgumentNullException("Order cannot be null");
-
         oldOrder.Status = Status;
-        oldOrder.DateOfDelivery = DateOfDelivery;
-
+        if(DateOfDelivery != null) oldOrder.DateOfDelivery = DateOfDelivery;
         return oldOrder;
     }
-
 }

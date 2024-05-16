@@ -17,16 +17,44 @@ namespace Server.Infrastructure.src.Middleware
         }
     }
 
-    public class VerifyResourceOwnerHandler : AuthorizationHandler<VerifyResourceOwnerRequirement, AddressReadDto>
+    // public class VerifyResourceOwnerHandler : AuthorizationHandler<VerifyResourceOwnerRequirement, AddressReadDto>
+    // {
+    //     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, VerifyResourceOwnerRequirement requirement, AddressReadDto resource)
+    //     {
+    //         var claims = context.User.Claims;
+    //         var userId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value; // id of authenticated user
+    //         if(userId == resource.UserId.ToString())
+    //         {
+    //             context.Succeed(requirement);
+    //         }
+    //         return Task.CompletedTask;
+    //     }
+    // }
+    public class VerifyResourceOwnerHandler : AuthorizationHandler<VerifyResourceOwnerRequirement>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, VerifyResourceOwnerRequirement requirement, AddressReadDto resource)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, VerifyResourceOwnerRequirement requirement)
         {
-            var claims = context.User.Claims;
-            var userId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value; // id of authenticated user
-            if(userId == resource.UserId.ToString())
+            if (context.Resource is AddressReadDto addressResource)
             {
-                context.Succeed(requirement);
+                var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (userId == addressResource.UserId.ToString())
+                {
+                    context.Succeed(requirement);
+                }
             }
+            else if (context.Resource is OrderReadDto orderResource)
+            {
+                var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (userId == orderResource.UserId.ToString())
+                {
+                    context.Succeed(requirement);
+                }
+            }
+            // else
+            // {
+            //     // Handle other resource types if needed
+            // }
+
             return Task.CompletedTask;
         }
     }

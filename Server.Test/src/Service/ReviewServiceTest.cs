@@ -18,9 +18,9 @@ public class ReviewServiceTest
     public async void CreateReviewAsync_CreatesAReview_ReturnsTheReview()
     {
         var userId = Guid.Parse("1972b1f3-bf6b-4f99-b46e-34abaf608ae9");
-        var orderedProductId = Guid.Parse("ff05a8a2-b397-4833-aa80-f8291b0a4518");
-        var review = new Review(1.0, "Absolutely garbage.I dont recommend it at all", userId, orderedProductId);
-        var createReviewDTO = new CreateReviewDTO(review.Rating, review.Comment, review.UserId, review.OrderedProductId, null);
+        var orderProductId = Guid.Parse("ff05a8a2-b397-4833-aa80-f8291b0a4518");
+        var review = new Review(1.0, "Absolutely garbage.I dont recommend it at all", userId, orderProductId);
+        var createReviewDTO = new CreateReviewDTO(review.Rating, review.Comment, review.UserId, review.OrderProductId, null);
 
         _mockReviewRepo.Setup(x => x.CreateReviewAsync(It.IsAny<Review>(), null)).ReturnsAsync(review);
         _reviewService = new ReviewService(_mockReviewRepo.Object);

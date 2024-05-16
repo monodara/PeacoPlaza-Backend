@@ -100,9 +100,11 @@ public class SeedingData
                 "41C", "Asemakatu", "Pori", "Finland", "61200", "4198767000", "John", "Mull", "K-market",
                 user.Id
             );
-        return [
+        var addresses = new List<Address>
+        {
             address
-        ];
+        }; 
+        return addresses;
     }
     public static List<Address> Addresses = GetAddresses();
 
@@ -123,23 +125,19 @@ public class SeedingData
     public static List<WishlistItem> GetWishlistItems()
     {
         var wishlistItem = new WishlistItem(Products[0].Id, Wishlists[0].Id);
-        return [
-            wishlistItem
-        ];
+        return new List<WishlistItem>{wishlistItem};
     }
     public static List<Order> GetOrders()
     {
-        var order = new Order(Users[1].Id, Addresses[0].Id);
-        return [
-            order
-        ];
+        var order = new Order{UserId = Users[1].Id, AddressId = Addresses[0].Id};
+        return new List<Order>{order};
     }
     public static List<Order> Orders = GetOrders();
     public static List<OrderProduct> GetOrderProducts()
     {
         var orderProducts = new List<OrderProduct>();
-        var orderProduct1 = new OrderProduct(Orders[0].Id, Products[0].Id, 3);
-        var orderProduct2 = new OrderProduct(Orders[0].Id, Products[1].Id, 1);
+        var orderProduct1 = new OrderProduct{OrderId = Orders[0].Id, ProductId = Products[0].Id, Quantity = 3};
+        var orderProduct2 = new OrderProduct{OrderId = Orders[0].Id, ProductId = Products[1].Id, Quantity = 1};
         orderProducts.Add(orderProduct1);
         orderProducts.Add(orderProduct2);
         return orderProducts;

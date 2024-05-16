@@ -38,7 +38,6 @@ namespace Server.Controller.src.Controller
         [HttpPatch("{id}")]
         public async Task<CategoryReadDTO> UpdateCategoryAsync([FromRoute] Guid id, [FromBody] CategoryUpdateDTO category)
         {
-            Console.WriteLine("controler"+category.ParentCategoryId);
             return await _categoryServices.UpdateCategory(id, category);
         }
         [Authorize(Roles = "Admin")]

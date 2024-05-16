@@ -92,7 +92,7 @@ namespace Server.Infrastructure.src.Repo
             }
 
             // Apply pagination
-            int skipCount = options.PageSize * options.PageNo;
+            int skipCount = options.PageSize * (options.PageNo - 1);
             query = query.Skip(skipCount).Take(options.PageSize);
 
             return await query.ToListAsync();

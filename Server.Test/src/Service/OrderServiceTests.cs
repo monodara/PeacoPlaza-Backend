@@ -20,15 +20,15 @@ public class OrderServiceTests
 
     [Theory]
     [ClassData(typeof(OrderServiceTestData))]
-    public async Task CreateOrderAsync_CreateOrder_ReturnsOrder(CreateOrderDTO createOrderDTO)
+    public async Task CreateOrderAsync_CreateOrder_ReturnsOrder(OrderCreateDto orderCreateDto)
     {
-        var order = createOrderDTO.CreateOrder();
-        var productsList = createOrderDTO.ProductList;
+        var order = orderCreateDto.CreateOrder();
+        var productsList = orderCreateDto.ProductList;
 
         _orderRepoMock.Setup(x => x.CreateOrderAsync(It.IsAny<Order>(), productsList)).ReturnsAsync(order);
 
         _orderService = new OrderService(_orderRepoMock.Object);
-        var expectedResult = await _orderService.CreateOrderAsync(createOrderDTO);
+        var expectedResult = await _orderService.CreateOrderAsync(orderCreateDto);
 
         Assert.NotNull(expectedResult);
 

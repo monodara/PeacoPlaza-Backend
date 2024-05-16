@@ -8,7 +8,6 @@ public enum Status
     processing,
     shipped,
     cancelled,
-    delivered,
+    // delivered,
     completed,
-    pending
 }

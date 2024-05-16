@@ -66,7 +66,7 @@ namespace Server.Controller.src.Controller
         [HttpDelete("{id}")]
         public async Task<bool> DeleteUserByIdAsync([FromRoute] Guid id)
         {
-            var userClaims = HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
             return await _userService.DeleteUserByIdAsync(id);
         }
