@@ -17,7 +17,7 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
 
     public override async Task<IEnumerable<Product>> GetAllAsync(QueryOptions options)
     {
-        var allData = _data.Include("Images").Include("Category").Skip(options.PageNo).Take(options.PageSize);
+        var allData = _data.Include("ProductImages").Include("Category").Skip(options.PageNo).Take(options.PageSize);
         if (options.sortType == SortType.byTitle && options.sortOrder == SortOrder.asc)
         {
             return allData.OrderBy(item => item.Name).ToArray();
@@ -35,12 +35,12 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
 
     public IEnumerable<Product> GetByCategory(Guid categoryId)
     {
-        return _data.Include("Images").Include("Category").Where(products => products.Category.Id == categoryId);
+        return _data.Include("ProductImages").Include("Category").Where(products => products.Category.Id == categoryId);
     }
 
     public override async Task<Product> GetOneByIdAsync(Guid id)
     {
-        var allData = _data.Include("Images").Include("Category");
+        var allData = _data.Include("ProductImages").Include("Category");
         return allData.FirstOrDefault(product => product.Id == id);
     }
 

@@ -20,7 +20,7 @@ public class Product : BaseEntity
     [Required(ErrorMessage = "Product category id is required")]
     public Guid CategoryId { get; set; }
     public Category Category { get; set; }
-    public IEnumerable<ProductImage> ProductImages { get; set; }
+    public List<ProductImage> ProductImages { get; set; }
     public Product(string name, decimal price, string description, int inventory, decimal weight, Guid categoryId)
     {
         Id = Guid.NewGuid();

@@ -7,7 +7,7 @@ public class ProductReadDTO : BaseEntity
     public string Name { get; set; }
     public decimal Price { get; set; }
     public string Description { get; set; }
-    public IEnumerable<ProductImageReadDTO> Images { get; set; }
+    public IEnumerable<ProductImageReadDTO> ProductImages { get; set; }
     public int Inventory { get; set; }
     public decimal Weight { get; set; }
     public CategoryReadDTO Category { get; set; }
@@ -27,7 +27,6 @@ public class ProductCreateDTO
     public string Name { get; set; }
     public decimal Price { get; set; }
     public string Description { get; set; }
-    public IEnumerable<ProductImageCreateDTO> Images { get; set; }
     public int Inventory { get; set; }
     public decimal Weight { get; set; }
     public Guid CategoryId { get; set; }
