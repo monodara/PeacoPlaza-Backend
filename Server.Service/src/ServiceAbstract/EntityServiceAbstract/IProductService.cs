@@ -11,6 +11,7 @@ namespace Server.Service.src.ServiceAbstract.EntityServiceAbstract
         Task<ProductReadDTO> UpdateProduct(Guid id, ProductUpdateDTO prodImg);
         Task<bool> DeleteProduct(Guid id);
         Task<IEnumerable<ProductReadDTO>> GetAllProductsByCategoryAsync(Guid categoryId);
+        Task<IEnumerable<ProductReadDTO>> GetAllProductsByCategoryAndSubcategoriesAsync(Guid categoryId);
         Task<IEnumerable<ProductReadDTO>> GetMostPurchasedProductsAsync(int top);
     }
 }

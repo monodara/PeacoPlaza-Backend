@@ -73,5 +73,10 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
                 return false;
             }
         }
+        // public async Task<IEnumerable<Category>> GetAllSubcategories(Guid categoryId)
+        // {
+        //     return await _categoryRepo.GetSubcategories(categoryId);
+        // }
+
     }
 }

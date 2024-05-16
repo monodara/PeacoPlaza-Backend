@@ -94,5 +94,20 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
                 throw CustomException.NotFoundException("Id not found");
             }
         }
+
+        public async Task<IEnumerable<ProductReadDTO>> GetAllProductsByCategoryAndSubcategoriesAsync(Guid categoryId)
+        {
+            var products = await GetAllProductsByCategoryAsync(categoryId);
+
+            var allSubcategories = await _categoryRepo.GetSubcategories(categoryId);
+            foreach (var subcategory in allSubcategories)
+            {
+                var subcategoryProducts = await GetAllProductsByCategoryAsync(subcategory.Id);
+                products = products.Concat(subcategoryProducts);
+            }
+
+            return products;
+        }
+
     }
 }

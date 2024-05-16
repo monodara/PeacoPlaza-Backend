@@ -32,7 +32,7 @@ namespace Server.Controller.src.Controller
         [HttpGet("category/{categoryId}")]
         public async Task<IEnumerable<ProductReadDTO>> GetAllProductsByCategoryAsync([FromRoute] Guid categoryId)
         {
-            return await _productServices.GetAllProductsByCategoryAsync(categoryId);
+            return await _productServices.GetAllProductsByCategoryAndSubcategoriesAsync(categoryId);
         }
         [HttpGet("top/{topNumber:int}")]
         public async Task<IEnumerable<ProductReadDTO>> GetMostPurchased([FromRoute] int top)

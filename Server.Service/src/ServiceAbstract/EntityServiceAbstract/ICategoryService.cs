@@ -1,4 +1,5 @@
 using Server.Core.src.Common;
+using Server.Core.src.Entity;
 using Server.Service.src.DTO;
 
 namespace Server.Service.src.ServiceAbstract.EntityServiceAbstract
@@ -10,5 +11,7 @@ namespace Server.Service.src.ServiceAbstract.EntityServiceAbstract
         public Task<CategoryReadDTO> CreateCategory(CategoryCreateDTO category);
         public Task<CategoryReadDTO> UpdateCategory(Guid id, CategoryUpdateDTO category);
         public Task<bool> DeleteCategory(Guid id);
+        // public Task<IEnumerable<Category>> GetAllSubcategories(Guid categoryId);
+
     }
 }
