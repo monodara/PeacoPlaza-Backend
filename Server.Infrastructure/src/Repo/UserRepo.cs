@@ -84,7 +84,7 @@ namespace Server.Infrastructure.src.Repo
             }
 
             // Apply pagination
-            int skipCount = options.PageSize * options.PageNo;
+            int skipCount = options.PageSize * (options.PageNo-1);
             query = query.Skip(skipCount).Take(options.PageSize);
 
             return await query.ToListAsync();
@@ -92,7 +92,9 @@ namespace Server.Infrastructure.src.Repo
 
         public async Task<User> GetUserByIdAsync(Guid id)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var user = await _context.Users
+                        .Include(u => u.Avatar) 
+                        .FirstOrDefaultAsync(u => u.Id == id);
             return user;
         }
 
@@ -107,7 +109,6 @@ namespace Server.Infrastructure.src.Repo
 
             // Save changes to the database
             await _context.SaveChangesAsync();
-
             return userToUpdate;
 
         }
@@ -131,21 +132,21 @@ namespace Server.Infrastructure.src.Repo
                 if (avatar is not null)
                 {
                     avatar.Data = data;
-                    _context.Avatars.Update(avatar); 
+                    _context.Avatars.Update(avatar);
                 }
                 else
                 {
                     avatar = new Avatar { UserId = userId, Data = data };
-                    await _context.Avatars.AddAsync(avatar); 
+                    await _context.Avatars.AddAsync(avatar);
                 }
 
-                await _context.SaveChangesAsync(); 
+                await _context.SaveChangesAsync();
                 // update avatarId in user table
                 var user = await GetUserByIdAsync(userId);
                 user.AvatarId = avatar.Id;
                 _context.Users.Update(user);
 
-                await _context.SaveChangesAsync(); 
+                await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync(); // commit
                 return true;
@@ -154,7 +155,7 @@ namespace Server.Infrastructure.src.Repo
             {
                 // roll back
                 await transaction.RollbackAsync();
-                return false; 
+                return false;
             }
         }
     }

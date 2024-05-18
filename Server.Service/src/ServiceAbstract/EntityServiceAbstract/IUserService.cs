@@ -1,4 +1,5 @@
 using Server.Core.src.Common;
+using Server.Core.src.Entity;
 using Server.Service.src.DTO;
 
 namespace Server.Service.src.ServiceAbstract.EntityServiceAbstract
@@ -12,6 +13,7 @@ namespace Server.Service.src.ServiceAbstract.EntityServiceAbstract
         Task<UserReadDto> CreateCustomerAsync(UserCreateDto user);
         // Task<UserReadDto> CreateAdminAsync(UserCreateDto user);
         Task<bool> CheckEmailAsync(string email);
-        Task<bool> ChangePassword(Guid id, string password);
+        Task<bool> ChangePasswordAsync(Guid id, string password);
+        Task<bool> UploadAvatarAsync(Guid userId, byte[] data);
     }
 }

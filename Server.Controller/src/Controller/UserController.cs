@@ -45,7 +45,14 @@ namespace Server.Controller.src.Controller
         {
             var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
-            return await _userService.GetUserByIdAsync(id);
+            var userReadDto = await _userService.GetUserByIdAsync(id);
+
+            // 将 Avatar 数据转换为 Base64 编码字符串
+            if (userReadDto.AvatarBase64 != null && userReadDto.Avatar.Data != null)
+            {
+                userReadDto.AvatarBase64 = Convert.ToBase64String(userReadDto.Avatar.Data);
+            }
+            return userReadDto;
         }
         [Authorize]
         [HttpGet("profile")]
@@ -104,7 +111,6 @@ namespace Server.Controller.src.Controller
                     await userForm.AvatarImage.CopyToAsync(ms);
                     var content = ms.ToArray();
                     var uploaded = await _userService.UploadAvatarAsync(userId, content);
-                    Console.WriteLine(uploaded);
                     if(uploaded)
                         return File(content, userForm.AvatarImage.ContentType);
                     throw new DbUpdateException("Failed to upload avatar...");
