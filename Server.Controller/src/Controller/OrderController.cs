@@ -58,7 +58,6 @@ public class OrderController : ControllerBase
     [HttpPost]
     public async Task<OrderReadDto> CreateOrderAsync([FromBody] OrderCreateDto order)
     {
-        // Console.WriteLine(order.AddressId);
         var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
         var userId = Guid.Parse(userClaims);
@@ -67,14 +66,14 @@ public class OrderController : ControllerBase
 
     [Authorize]
     [HttpPatch("{id}")]
-    public async Task<bool> UpdateOrderByIdAsync([FromRoute] Guid id, [FromBody] UpdateOrderDTO updateOrderDTO)
+    public async Task<bool> UpdateOrderByIdAsync([FromRoute] Guid id, [FromBody] OrderUpdateDto orderUpdateDto)
     {
         var order = await _orderService.GetOrderByIdAsync(id);
         var isAdmin = HttpContext.User.IsInRole("Admin");
         var authorizationResult = await _authorizationService.AuthorizeAsync(HttpContext.User, order, "ResourceOwner");
         if (isAdmin || authorizationResult.Succeeded)
         {
-            return await _orderService.UpdateOrderByIdAsync(id, updateOrderDTO);
+            return await _orderService.UpdateOrderByIdAsync(id, orderUpdateDto);
         }
         throw new UnauthorizedAccessException("You don't have the authorization to update the order.");
     }
@@ -92,5 +91,5 @@ public class OrderController : ControllerBase
         throw new UnauthorizedAccessException("The order doesn't belong to you.");
     }
 
-    
+
 }

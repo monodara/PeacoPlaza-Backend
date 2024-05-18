@@ -38,11 +38,16 @@ public class OrderReadDto
 public class OrderCreateDto
 {
     public Guid AddressId { get; set; }
-    public IEnumerable<OrderProduct> OrderProducts { get; set; }
+    public IEnumerable<OrderProductCreatedDto> OrderProducts { get; set; }
 
     public Order CreateOrder()
     {
-        return new Order { AddressId = AddressId, OrderProducts = OrderProducts };
+        IEnumerable<OrderProduct> orderProducts = OrderProducts.Select(op => new OrderProduct
+        {
+            ProductId = op.ProductId,
+            Quantity = op.Quantity
+        }).ToList();
+        return new Order { AddressId = AddressId, OrderProducts = orderProducts };
     }
 }
 public class OrderUpdateDto
