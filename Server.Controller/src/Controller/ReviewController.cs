@@ -21,14 +21,14 @@ public class ReviewController : ControllerBase
 
     // [Authorize]
     [HttpGet]
-    public async Task<IEnumerable<ReadReviewDTO>> GetAllReviewsAsync([FromQuery] QueryOptions options)
+    public async Task<IEnumerable<ReviewReadDto>> GetAllReviewsAsync([FromQuery] QueryOptions options)
     {
         return await _reviewService.GetAllReviewsAsync(options);
     }
 
     [Authorize]
     [HttpGet("my_reviews")]
-    public async Task<IEnumerable<ReadReviewDTO>> GetAllReviewsByUserAsync([FromQuery] QueryOptions options)
+    public async Task<IEnumerable<ReviewReadDto>> GetAllReviewsByUserAsync([FromQuery] QueryOptions options)
     {
         var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var userId = Guid.Parse(userClaims);
@@ -36,20 +36,20 @@ public class ReviewController : ControllerBase
     }
 
     [HttpGet("product/{id}")]
-    public async Task<IEnumerable<ReadReviewDTO>> GetAllReviewsByProductIdAsync([FromQuery] QueryOptions options, [FromRoute] Guid id)
+    public async Task<IEnumerable<ReviewReadDto>> GetAllReviewsByProductIdAsync([FromQuery] QueryOptions options, [FromRoute] Guid id)
     {
         if (id == Guid.Empty) throw new ArgumentNullException("Product Id should be valid");
         return await _reviewService.GetAllReviewsByProductIdAsync(options, id);
     }
 
     [HttpGet("{id}")]
-    public async Task<ReadReviewDTO> GetReviewByIdAsync([FromRoute] Guid id)
+    public async Task<ReviewReadDto> GetReviewByIdAsync([FromRoute] Guid id)
     {
         return await _reviewService.GetReviewByIdAsync(id);
     }
     [Authorize]
     [HttpPost]
-    public async Task<ReadReviewDTO> CreateReviewAsync([FromBody] CreateReviewDTO review)
+    public async Task<ReviewReadDto> CreateReviewAsync([FromBody] ReviewCreateDto review)
     {
         var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var userId = Guid.Parse(userClaims);
@@ -57,7 +57,7 @@ public class ReviewController : ControllerBase
     }
 
     [HttpPatch("{id}")]
-    public async Task<ReadReviewDTO> UpdateReviewByIdAsync([FromRoute] Guid id, [FromBody] UpdateReviewsDTO updateReview)
+    public async Task<ReviewReadDto> UpdateReviewByIdAsync([FromRoute] Guid id, [FromBody] UpdateReviewsDTO updateReview)
     {
         return await _reviewService.UpdateReviewByIdAsync(id, updateReview);
     }

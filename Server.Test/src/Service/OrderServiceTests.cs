@@ -59,8 +59,8 @@ public class OrderServiceTests
 
         var order = new Order(userId, addressId);
 
-        var updateOrderDTO = new UpdateOrderDTO(Status.shipped, DateTime.Now, addressId);
-        var newOrder = updateOrderDTO.UpdateOrder(order);
+        var orderUpdateDto = new OrderUpdateDto(Status.shipped, DateTime.Now, addressId);
+        var newOrder = orderUpdateDto.UpdateOrder(order);
 
         _orderRepoMock.Setup(x => x.GetOrderByIdAsync(order.Id))
                   .ReturnsAsync(order);
@@ -70,7 +70,7 @@ public class OrderServiceTests
 
         _orderService = new OrderService(_orderRepoMock.Object);
 
-        var result = await _orderService.UpdateOrderByIdAsync(order.Id, updateOrderDTO);
+        var result = await _orderService.UpdateOrderByIdAsync(order.Id, orderUpdateDto);
 
         Assert.True(result);
     }
