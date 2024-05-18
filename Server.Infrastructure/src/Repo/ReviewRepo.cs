@@ -44,7 +44,7 @@ public class ReviewRepo : IReviewRepo
         return isDeleted;
     }
 
-    public async Task<IEnumerable<Review>> GetAllReviewsAsync(QueryOptions options, Guid userId)
+    public async Task<IEnumerable<Review>> GetAllReviewsAsync(QueryOptions options)
     {
         var pgNo = options.PageNo;
         var pgSize = options.PageSize;

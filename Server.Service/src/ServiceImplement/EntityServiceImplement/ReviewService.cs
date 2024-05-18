@@ -13,18 +13,17 @@ public class ReviewService : IReviewService
     {
         _reviewrepo = reviewrepo;
     }
-    public async Task<ReadReviewDTO> CreateReviewAsync(CreateReviewDTO review)
+    public async Task<ReadReviewDTO> CreateReviewAsync(Guid userId, CreateReviewDTO review)
     {
         if (review == null) throw new ArgumentNullException("Review cannot be null");
         var reviewImages = review.ReviewImages;
-        var createdReview = await _reviewrepo.CreateReviewAsync(review.CreateReviews(), reviewImages);
+        var createdReview = await _reviewrepo.CreateReviewAsync(review.CreateReviews(userId), reviewImages);
         return new ReadReviewDTO().ReadReviews(createdReview);
     }
 
-    public async Task<IEnumerable<ReadReviewDTO>> GetAllReviewsAsync(QueryOptions options, Guid userId)
+    public async Task<IEnumerable<ReadReviewDTO>> GetAllReviewsAsync(QueryOptions options)
     {
-        if (userId == Guid.Empty) throw new ArgumentNullException("User cannot be null");
-        var reviews = await _reviewrepo.GetAllReviewsAsync(options, userId);
+        var reviews = await _reviewrepo.GetAllReviewsAsync(options);
         return reviews.Select(r => new ReadReviewDTO().ReadReviews(r)).ToList();
     }
 

@@ -5,7 +5,7 @@ namespace Server.Core.src.RepoAbstract;
 
 public interface IReviewRepo
 {
-    public Task<IEnumerable<Review>> GetAllReviewsAsync(QueryOptions options, Guid userId);
+    public Task<IEnumerable<Review>> GetAllReviewsAsync(QueryOptions options);
     public Task<IEnumerable<Review>> GetAllReviewsByUserAsync(QueryOptions options, Guid userId);
     public Task<IEnumerable<Review>> GetAllReviewsByProductIdAsync(QueryOptions options, Guid productId);
     public Task<Review> GetReviewByIdAsync(Guid reviewId);

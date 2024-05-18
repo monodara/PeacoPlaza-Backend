@@ -47,7 +47,6 @@ namespace Server.Controller.src.Controller
             if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
             var userReadDto = await _userService.GetUserByIdAsync(id);
 
-            // 将 Avatar 数据转换为 Base64 编码字符串
             if (userReadDto.AvatarBase64 != null && userReadDto.Avatar.Data != null)
             {
                 userReadDto.AvatarBase64 = Convert.ToBase64String(userReadDto.Avatar.Data);

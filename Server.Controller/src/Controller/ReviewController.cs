@@ -13,37 +13,25 @@ namespace Server.Controller.src.Controller;
 public class ReviewController : ControllerBase
 {
     private readonly IReviewService _reviewService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public ReviewController(IReviewService reviewService, IHttpContextAccessor httpContextAccessor)
+    public ReviewController(IReviewService reviewService)
     {
         _reviewService = reviewService;
-        _httpContextAccessor = httpContextAccessor;
     }
 
-    [Authorize]
+    // [Authorize]
     [HttpGet]
     public async Task<IEnumerable<ReadReviewDTO>> GetAllReviewsAsync([FromQuery] QueryOptions options)
     {
-        var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
-
-        var userId = Guid.Parse(userClaims);
-
-        return await _reviewService.GetAllReviewsAsync(options, userId);
+        return await _reviewService.GetAllReviewsAsync(options);
     }
 
     [Authorize]
-    [HttpGet("admin")]
+    [HttpGet("my_reviews")]
     public async Task<IEnumerable<ReadReviewDTO>> GetAllReviewsByUserAsync([FromQuery] QueryOptions options)
     {
-        var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
-
+        var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var userId = Guid.Parse(userClaims);
-
         return await _reviewService.GetAllReviewsByUserAsync(options, userId);
     }
 
@@ -59,11 +47,13 @@ public class ReviewController : ControllerBase
     {
         return await _reviewService.GetReviewByIdAsync(id);
     }
-
+    [Authorize]
     [HttpPost]
     public async Task<ReadReviewDTO> CreateReviewAsync([FromBody] CreateReviewDTO review)
     {
-        return await _reviewService.CreateReviewAsync(review);
+        var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userId = Guid.Parse(userClaims);
+        return await _reviewService.CreateReviewAsync(userId, review);
     }
 
     [HttpPatch("{id}")]
