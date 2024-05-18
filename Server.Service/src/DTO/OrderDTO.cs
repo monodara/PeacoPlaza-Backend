@@ -11,7 +11,7 @@ public class OrderReadDto
     public Status Status { get; set; }
     public Guid UserId { get; set; }
     public DateTime? DateOfDelivery { get; set; }
-    public IEnumerable<OrderProduct> OrderProducts { get; set; }
+    public IEnumerable<OrderProductReadDto> OrderProducts { get; set; }
 
     public OrderReadDto ReadOrder(Order order)
     {
@@ -22,7 +22,16 @@ public class OrderReadDto
             Status = order.Status,
             UserId = order.UserId,
             DateOfDelivery = order.DateOfDelivery,
-            // OrderProducts = order.OrderProducts,
+            OrderProducts = order.OrderProducts.Select(op => new OrderProductReadDto
+            {
+                Product = new ProductReadDTO
+                {
+                    Name = op.Product.Name,
+                    Price = op.Product.Price,
+                    // ProductImages = op.Product.ProductImages.Select(pi => new ProductImageReadDTO { /* map properties */ })
+                },
+                Quantity = op.Quantity
+            })
         };
     }
 }
