@@ -44,24 +44,24 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
         return allData.FirstOrDefault(product => product.Id == id);
     }
 
-    public IEnumerable<Product> GetMostPurchased(int topNumber)
+    public async Task<IEnumerable<Product>> GetMostPurchasedAsync(int topNumber)
     {
-        // var mostPurchasedProducts = _orderProducts
-        //         .GroupBy(orderProduct => orderProduct.Product.Id)
-        //         .Select(group => new
-        //         {
-        //             ProductId = group.Key,
-        //             TotalQuantity = group.Sum(item => item.Quantity)
-        //         })
-        //         .OrderByDescending(item => item.TotalQuantity)
-        //         .Take(topNumber)
-        //         .Join(_data.Include("Images").Include("Category"),
-        //             orderItem => orderItem.ProductId,
-        //             product => product.Id,
-        //             (orderItem, product) => product)
-        //         .ToArray();
+        Console.WriteLine(topNumber);
+        var mostPurchasedProducts = await _orderProducts
+            .GroupBy(orderProduct => orderProduct.Product.Id)
+            .Select(group => new
+            {
+                ProductId = group.Key,
+                TotalQuantity = group.Sum(item => item.Quantity)
+            })
+            .OrderByDescending(item => item.TotalQuantity)
+            .Take(topNumber)
+            .Join(_data.Include("ProductImages").Include("Category"),
+                orderItem => orderItem.ProductId,
+                product => product.Id,
+                (orderItem, product) => product)
+            .ToListAsync();
 
-        // return mostPurchasedProducts;
-        return null;
+        return mostPurchasedProducts;
     }
 }

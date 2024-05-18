@@ -6,5 +6,5 @@ namespace Server.Core.src.RepoAbstract;
 public interface IProductRepo : IBaseRepo<Product>
 {
     IEnumerable<Product> GetByCategory(Guid categoryId);
-    IEnumerable<Product> GetMostPurchased(int topNumber);
+    Task<IEnumerable<Product>> GetMostPurchasedAsync(int topNumber);
 }

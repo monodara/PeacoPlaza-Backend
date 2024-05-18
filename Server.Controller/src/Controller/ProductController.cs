@@ -35,9 +35,9 @@ namespace Server.Controller.src.Controller
             return await _productServices.GetAllProductsByCategoryAndSubcategoriesAsync(categoryId);
         }
         [HttpGet("top/{topNumber:int}")]
-        public async Task<IEnumerable<ProductReadDTO>> GetMostPurchased([FromRoute] int top)
+        public async Task<IEnumerable<ProductReadDTO>> GetMostPurchasedAsync([FromRoute] int topNumber)
         {
-            return await _productServices.GetMostPurchasedProductsAsync(top);
+            return await _productServices.GetMostPurchasedProductsAsync(topNumber);
         }
         [Authorize(Roles = "Admin")]
         [HttpPost]

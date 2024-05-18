@@ -64,7 +64,7 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
 
         public async Task<IEnumerable<ProductReadDTO>> GetMostPurchasedProductsAsync(int top)
         {
-            var result = _productRepo.GetMostPurchased(top);
+            var result = await _productRepo.GetMostPurchasedAsync(top);
             return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductReadDTO>>(result);
         }
 
