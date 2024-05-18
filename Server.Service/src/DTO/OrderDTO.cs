@@ -28,9 +28,7 @@ public class OrderReadDto
 }
 public class OrderCreateDto
 {
-    // public Guid UserId { get; set; }
     public Guid AddressId { get; set; }
-    // public List<ProductsList> ProductList { get; set; }
     public IEnumerable<OrderProduct> OrderProducts { get; set; }
 
     public Order CreateOrder()
@@ -38,11 +36,11 @@ public class OrderCreateDto
         return new Order { AddressId = AddressId, OrderProducts = OrderProducts };
     }
 }
-public class UpdateOrderDTO
+public class OrderUpdateDto
 {
     public Status Status { get; set; }
     public DateTime? DateOfDelivery { get; set; } = DateTime.Now;
-    public UpdateOrderDTO(Status status, DateTime dateOfDelivery)
+    public OrderUpdateDto(Status status, DateTime dateOfDelivery)
     {
         Status = status;
         DateOfDelivery = dateOfDelivery;
@@ -50,7 +48,7 @@ public class UpdateOrderDTO
     public Order UpdateOrder(Order oldOrder)
     {
         oldOrder.Status = Status;
-        if(DateOfDelivery != null) oldOrder.DateOfDelivery = DateOfDelivery;
+        if (DateOfDelivery != null) oldOrder.DateOfDelivery = DateOfDelivery;
         return oldOrder;
     }
 }
