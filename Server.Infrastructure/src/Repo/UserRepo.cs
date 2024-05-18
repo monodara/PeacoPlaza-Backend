@@ -124,20 +124,38 @@ namespace Server.Infrastructure.src.Repo
 
         public async Task<bool> UploadAvatarAsync(Guid userId, byte[] data)
         {
-            var avatar = await _context.Avatars.FirstOrDefaultAsync(avatar => avatar.UserId == userId);
-            if(avatar is not null){
-                avatar.Data = data;
-                _context.Avatars.Update(avatar);//update the row in avatars table
-            }else{
-                avatar = new Avatar { UserId = userId, Data = data };
-                await _context.Avatars.AddAsync(avatar);
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var avatar = await _context.Avatars.FirstOrDefaultAsync(avatar => avatar.UserId == userId);
+                if (avatar is not null)
+                {
+                    avatar.Data = data;
+                    _context.Avatars.Update(avatar); 
+                }
+                else
+                {
+                    avatar = new Avatar { UserId = userId, Data = data };
+                    await _context.Avatars.AddAsync(avatar); 
+                }
+
+                await _context.SaveChangesAsync(); 
+                // update avatarId in user table
+                var user = await GetUserByIdAsync(userId);
+                user.AvatarId = avatar.Id;
+                _context.Users.Update(user);
+
+                await _context.SaveChangesAsync(); 
+
+                await transaction.CommitAsync(); // commit
+                return true;
             }
-            //update avatar in user table
-            var user = await GetUserByIdAsync(userId);
-            user.AvatarId = avatar.Id;
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
-            return true;
+            catch (Exception ex)
+            {
+                // roll back
+                await transaction.RollbackAsync();
+                return false; 
+            }
         }
     }
 }
