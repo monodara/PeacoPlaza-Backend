@@ -16,6 +16,8 @@ namespace Server.Core.src.Entity
         [MinLength(6, ErrorMessage = "Password must be at least 6 characters.")]
         public string Password { get; set; }
         public Role Role { get; set; }
+        public Guid AvatarId { get; set; }
+        public Avatar Avatar { get; set; }
 
         // foreign key
         public Guid DefaultAddressId { get; set; }

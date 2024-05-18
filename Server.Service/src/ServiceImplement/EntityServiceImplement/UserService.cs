@@ -1,4 +1,5 @@
 using Server.Core.src.Common;
+using Server.Core.src.Entity;
 using Server.Core.src.RepoAbstract;
 using Server.Service.src.DTO;
 using Server.Service.src.ServiceAbstract.AuthServiceAbstract;
@@ -91,7 +92,7 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             }
             return new UserReadDto().Transform(updatedUser);
         }
-        public async Task<bool> ChangePassword(Guid id, string password)
+        public async Task<bool> ChangePasswordAsync(Guid id, string password)
         {
             var userToUpdate = await GetUserByIdAsync(id);
             if (userToUpdate == null)
@@ -101,6 +102,11 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             //hash password
             var hashedPwd = _pwdService.HashPassword(password, out byte[] salt);
             return await _userRepo.ChangePasswordAsync(id, hashedPwd, salt);
+        }
+
+        public async Task<bool> UploadAvatarAsync(Guid userId, byte[] data)
+        {
+            return await _userRepo.UploadAvatarAsync(userId, data);
         }
     }
 }

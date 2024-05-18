@@ -48,7 +48,7 @@ public class OrderService : IOrderService
         var createdOrder = await _orderRepository.CreateOrderAsync(order);
         return new OrderReadDto().ReadOrder(createdOrder);
     }
-    public async Task<bool> UpdateOrderByIdAsync(Guid orderId, UpdateOrderDTO newOrder)
+    public async Task<bool> UpdateOrderByIdAsync(Guid orderId, OrderUpdateDto newOrder)
     {
         if (orderId == Guid.Empty) throw new ArgumentException("Order id cannot be empty");
         var oldOrder = await _orderRepository.GetOrderByIdAsync(orderId);

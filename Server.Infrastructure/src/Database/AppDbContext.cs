@@ -7,6 +7,7 @@ namespace Server.Infrastructure.src.Database;
 public class AppDbContext : DbContext
 {
     public DbSet<User> Users { get; set; } // table `Users` -> `users`
+    public DbSet<Avatar> Avatars { get; set; }
     public DbSet<Address> Addresses { get; set; } // table `Addresses` -> `addresses`
     public DbSet<Wishlist> Wishlists { get; set; } // table `Wishlists` -> `wishlists`
     public DbSet<WishlistItem> WishlistItems { get; set; }
@@ -39,6 +40,9 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasIndex(u => u.Email).IsUnique();
+            entity.HasOne(u => u.Avatar)
+            .WithOne(a => a.User)
+            .HasForeignKey<Avatar>(a => a.UserId);
             entity.HasData(SeedingData.Users);
         });
         // -----------------------------------------------------------------------------------------------

@@ -121,6 +121,24 @@ namespace Server.Infrastructure.src.Repo
         {
             return await _context.Users.FirstOrDefaultAsync(user => user.Email == email);
         }
+
+        public async Task<bool> UploadAvatarAsync(Guid userId, byte[] data)
+        {
+            var avatar = await _context.Avatars.FirstOrDefaultAsync(avatar => avatar.UserId == userId);
+            if(avatar is not null){
+                avatar.Data = data;
+                _context.Avatars.Update(avatar);//update the row in avatars table
+            }else{
+                avatar = new Avatar { UserId = userId, Data = data };
+                await _context.Avatars.AddAsync(avatar);
+            }
+            //update avatar in user table
+            var user = await GetUserByIdAsync(userId);
+            user.AvatarId = avatar.Id;
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
 

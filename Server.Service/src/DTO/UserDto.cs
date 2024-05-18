@@ -10,6 +10,7 @@ namespace Server.Service.src.DTO
         public string Email { get; set; }
         public Role Role { get; set; }
         public Guid DefaultAddressId { get; set; }
+        public Avatar Avatar { get; set; }
 
         public UserReadDto Transform(User user)
         {
@@ -18,6 +19,7 @@ namespace Server.Service.src.DTO
             Email = user.Email;
             Role = user.Role;
             DefaultAddressId = user.DefaultAddressId;
+            Avatar = user.Avatar;
             return this;
         }
     }

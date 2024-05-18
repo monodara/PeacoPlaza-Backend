@@ -14,6 +14,7 @@ namespace Server.Core.src.RepoAbstract
         Task<bool> ChangePasswordAsync(Guid userId, string newPassword, byte[] salt);
         Task<bool> CheckEmailAsync(string email);
         Task<User> GetUserByCredentialsAsync(UserCredential userCredential);
+        Task<bool> UploadAvatarAsync(Guid userId, byte[] data);
 
     }
 }
