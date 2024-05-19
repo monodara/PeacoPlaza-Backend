@@ -18,7 +18,6 @@ public class ProductReadDTO : BaseEntity
         product.Description = Description;
         product.Inventory = Inventory;
         product.Weight = Weight;
-        product.CategoryId = Category.Id;
     }
 }
 
