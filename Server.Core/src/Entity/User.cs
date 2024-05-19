@@ -13,7 +13,8 @@ namespace Server.Core.src.Entity
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Password is required.")]
-        [MinLength(6, ErrorMessage = "Password must be at least 6 characters.")]
+        // [MinLength(6, ErrorMessage = "Password must be at least 6 characters.")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", ErrorMessage = "Password must be at least 8 characters and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")]
         public string Password { get; set; }
         public Role Role { get; set; }
         public Guid AvatarId { get; set; }
