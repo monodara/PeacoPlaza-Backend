@@ -12,7 +12,6 @@ namespace Server.Core.src.Entity
         public Wishlist Wishlist { get; set; }
         public WishlistItem(Guid productId, Guid wishlistId)
         {
-            Id = Guid.NewGuid();
             ProductId = productId;
             WishlistId = wishlistId;
         }

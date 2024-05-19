@@ -6,10 +6,12 @@ namespace Server.Service.src.DTO
     {
         public Guid UserId{ get; set; }
         public string Name { get; set; }
+        public IEnumerable<WishlistItemReadDto> WishlistItems { get; set; }
         public WishlistReadDto Transform(Wishlist wishlist)
         {
             Name = wishlist.Name;
             UserId = wishlist.UserId;
+            WishlistItems = wishlist.WishlistItems.Select(item => new WishlistItemReadDto().Transform(item)).ToList();
             return this;
         }
     }

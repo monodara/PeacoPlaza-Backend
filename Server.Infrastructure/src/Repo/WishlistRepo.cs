@@ -60,13 +60,14 @@ namespace Server.Infrastructure.src.Repo
 
         public async Task<Wishlist> GetWishlistByIdAsync(Guid id)
         {
-            var wishlist = await _context.Wishlists.FirstOrDefaultAsync(wl => wl.Id == id);
+            var wishlist = await _context.Wishlists.Include(w => w.WishlistItems)
+        .ThenInclude(wi => wi.Product).FirstOrDefaultAsync(wl => wl.Id == id);
             return wishlist;
         }
 
         public async Task<IEnumerable<Wishlist>> GetWishlistByUserAsync(Guid userId)
         {
-            return await _context.Wishlists.Where(wl => wl.UserId == userId).ToListAsync();
+            return await _context.Wishlists.Include("WishlistItems").Include("Product").Where(wl => wl.UserId == userId).ToListAsync();
         }
 
         public async Task<Wishlist> UpdateWishlistByIdAsync(Wishlist wishlist)

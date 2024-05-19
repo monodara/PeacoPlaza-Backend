@@ -13,11 +13,13 @@ public class ProductReadDTO : BaseEntity
     public CategoryReadDTO Category { get; set; }
     public void Transform(Product product)
     {
-        product.Name = Name;
-        product.Price = Price;
-        product.Description = Description;
-        product.Inventory = Inventory;
-        product.Weight = Weight;
+        Name = product.Name;
+        Price = product.Price;
+        Description = product.Description;
+        // ProductImages = product.ProductImages;
+        Inventory = product.Inventory;
+        Weight = product.Weight;
+        // Category = product.Category;
     }
 }
 
