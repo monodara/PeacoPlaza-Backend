@@ -109,5 +109,10 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             return products;
         }
 
+        public async Task<IEnumerable<ProductReadDTO>> GetTopRatedProductsAsync(int top)
+        {
+            var result = await _productRepo.GetTopRatedProductsAsync(top);
+            return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductReadDTO>>(result);
+        }
     }
 }

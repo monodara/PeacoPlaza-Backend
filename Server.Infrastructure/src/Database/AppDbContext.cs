@@ -91,6 +91,9 @@ public class AppDbContext : DbContext
         // -----------------------------------------------------------------------------------------------
         modelBuilder.Entity<OrderProduct>(entity =>
         {
+            entity.HasOne(op => op.Review)
+            .WithOne(r => r.OrderProduct)
+            .HasForeignKey<Review>(r => r.OrderProductId);
             entity.HasData(SeedingData.OrderProducts);
         });
 

@@ -34,11 +34,16 @@ namespace Server.Controller.src.Controller
         {
             return await _productServices.GetAllProductsByCategoryAndSubcategoriesAsync(categoryId);
         }
-        [HttpGet("top/{topNumber:int}")]
+        [HttpGet("most_purchased/{topNumber:int}")]
         public async Task<IEnumerable<ProductReadDTO>> GetMostPurchasedAsync([FromRoute] int topNumber)
         {
             return await _productServices.GetMostPurchasedProductsAsync(topNumber);
         }
+        [HttpGet("top_rated/{topNumber:int}")]
+        public async Task<IEnumerable<ProductReadDTO>> GetTopRatedAsync([FromRoute] int topNumber)
+        {
+            return await _productServices.GetTopRatedProductsAsync(topNumber);
+        }   
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ProductReadDTO> CreateProductAsync([FromBody] ProductCreateDTO product)

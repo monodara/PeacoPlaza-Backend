@@ -64,4 +64,22 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
 
         return mostPurchasedProducts;
     }
+
+    public async Task<IEnumerable<Product>> GetTopRatedProductsAsync(int topNumber)
+    {
+        var topRatedProducts = await _data
+        .Select(product => new
+        {
+            Product = product,
+            AverageRating = product.OrderProducts
+                                    .Where(orderProduct => orderProduct.Review != null)
+                                    .Average(orderProduct => orderProduct.Review.Rating)
+        })
+        .OrderByDescending(item => item.AverageRating)
+        .Take(topNumber)
+        .Select(item => item.Product)
+        .ToListAsync();
+
+        return topRatedProducts;
+    }
 }

@@ -21,6 +21,7 @@ public class Product : BaseEntity
     public Guid CategoryId { get; set; }
     public Category Category { get; set; }
     public List<ProductImage> ProductImages { get; set; }
+    public IEnumerable<OrderProduct>? OrderProducts { get; set; }
     public Product(string name, decimal price, string description, int inventory, decimal weight, Guid categoryId)
     {
         Id = Guid.NewGuid();

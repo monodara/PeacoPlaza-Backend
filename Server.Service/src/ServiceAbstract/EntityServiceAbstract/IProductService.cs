@@ -13,5 +13,6 @@ namespace Server.Service.src.ServiceAbstract.EntityServiceAbstract
         Task<IEnumerable<ProductReadDTO>> GetAllProductsByCategoryAsync(Guid categoryId);
         Task<IEnumerable<ProductReadDTO>> GetAllProductsByCategoryAndSubcategoriesAsync(Guid categoryId);
         Task<IEnumerable<ProductReadDTO>> GetMostPurchasedProductsAsync(int top);
+        Task<IEnumerable<ProductReadDTO>> GetTopRatedProductsAsync(int top);
     }
 }

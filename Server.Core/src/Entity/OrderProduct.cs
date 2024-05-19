@@ -7,6 +7,8 @@ public class OrderProduct : BaseEntity
     public Guid ProductId { get; set; }
     public Product Product { get; set; }
     public int Quantity { get; set; }
+    public Guid ReviewId { get; set; }
+    public Review Review { get; set; }
 
     // public OrderProduct(Guid orderId, Guid productId, int quantity)
     // {

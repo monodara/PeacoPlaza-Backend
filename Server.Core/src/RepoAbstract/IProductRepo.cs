@@ -7,4 +7,5 @@ public interface IProductRepo : IBaseRepo<Product>
 {
     IEnumerable<Product> GetByCategory(Guid categoryId);
     Task<IEnumerable<Product>> GetMostPurchasedAsync(int topNumber);
+    Task<IEnumerable<Product>> GetTopRatedProductsAsync(int topNumber);
 }
