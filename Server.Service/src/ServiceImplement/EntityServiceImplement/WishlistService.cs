@@ -62,9 +62,9 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             return wishlists.Select(wl => new WishlistReadDto().Transform(wl));
         }
 
-        public async Task<WishlistReadDto> UpdateWishlistByIdAsync(WishlistUpdateDto wishlist)
+        public async Task<WishlistReadDto> UpdateWishlistByIdAsync(Guid id, WishlistUpdateDto wishlist)
         {
-            var wishlistToUpdate = await _wishlistRepo.GetWishlistByIdAsync(wishlist.Id);
+            var wishlistToUpdate = await _wishlistRepo.GetWishlistByIdAsync(id);
             if (wishlistToUpdate == null)
             {
                 throw new ResourceNotFoundException("No wishlist found to update.");

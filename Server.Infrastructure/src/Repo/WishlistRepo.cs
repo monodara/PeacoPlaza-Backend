@@ -17,6 +17,7 @@ namespace Server.Infrastructure.src.Repo
         public async Task<bool> AddProductToWishlishAsync(Guid productId, Guid wishlistId)
         {
             await _context.WishlistItems.AddAsync(new WishlistItem(productId, wishlistId));
+            await _context.SaveChangesAsync();
             return true;
         }
 

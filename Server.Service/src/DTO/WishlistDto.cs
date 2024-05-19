@@ -4,10 +4,12 @@ namespace Server.Service.src.DTO
 {
     public class WishlistReadDto
     {
+        public Guid UserId{ get; set; }
         public string Name { get; set; }
         public WishlistReadDto Transform(Wishlist wishlist)
         {
             Name = wishlist.Name;
+            UserId = wishlist.UserId;
             return this;
         }
     }
@@ -26,11 +28,9 @@ namespace Server.Service.src.DTO
     }
     public class WishlistUpdateDto
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
-        public WishlistUpdateDto(Guid id, string name)
+        public WishlistUpdateDto(string name)
         {
-            Id = id;
             Name = name;
         }
 

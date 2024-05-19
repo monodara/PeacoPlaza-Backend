@@ -50,10 +50,14 @@ namespace Server.Infrastructure.src.Middleware
                     context.Succeed(requirement);
                 }
             }
-            // else
-            // {
-            //     // Handle other resource types if needed
-            // }
+            else if (context.Resource is WishlistReadDto wishlistResource)
+            {
+                var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (userId == wishlistResource.UserId.ToString())
+                {
+                    context.Succeed(requirement);
+                }
+            }
 
             return Task.CompletedTask;
         }

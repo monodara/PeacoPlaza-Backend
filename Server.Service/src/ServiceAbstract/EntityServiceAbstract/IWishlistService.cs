@@ -9,7 +9,7 @@ namespace Server.Service.src.ServiceAbstract.EntityServiceAbstract
         Task<IEnumerable<WishlistReadDto>> GetWishlistByUserAsync(Guid userId);
         Task<bool> DeleteWishlistByIdAsync(Guid id);
         Task<WishlistReadDto> CreateWishlistAsync(Guid userId, WishlistCreateDto wishlist);
-        Task<WishlistReadDto> UpdateWishlistByIdAsync(WishlistUpdateDto wishlist);
+        Task<WishlistReadDto> UpdateWishlistByIdAsync(Guid id, WishlistUpdateDto wishlist);
         Task<bool> AddProductToWishlishAsync(Guid productId, Guid wishlistId);
         Task<bool> DeleteProductFromWishlishAsync(Guid productId, Guid wishlistId);
     }

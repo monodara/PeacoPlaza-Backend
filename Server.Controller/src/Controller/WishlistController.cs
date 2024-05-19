@@ -13,21 +13,19 @@ namespace Server.Controller.src.Controller
     public class WishlistController : ControllerBase
     {
         private readonly IWishlistService _wishlistService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAuthorizationService _authorizationService;
 
-
-        public WishlistController(IWishlistService wishlistService, IHttpContextAccessor httpContextAccessor)
+        public WishlistController(IWishlistService wishlistService, IAuthorizationService authorizationService)
         {
             _wishlistService = wishlistService;
-            _httpContextAccessor = httpContextAccessor;
+            _authorizationService = authorizationService;
         }
 
         [Authorize]
         [HttpGet]
         public async Task<IEnumerable<WishlistReadDto>> GetWishlistByUsersAsync()
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
+            var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var userId = Guid.Parse(userClaims);
             return await _wishlistService.GetWishlistByUserAsync(userId);
         }
@@ -36,16 +34,19 @@ namespace Server.Controller.src.Controller
         [HttpGet("{id}")]
         public async Task<WishlistReadDto> GetWishlistByIdAsync([FromRoute] Guid id)
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
-            return await _wishlistService.GetWishlistByIdAsync(id);
+            var wishlist = await _wishlistService.GetWishlistByIdAsync(id);
+            var authorizationResult = await _authorizationService.AuthorizeAsync(HttpContext.User, wishlist, "ResourceOwner");
+            if (authorizationResult.Succeeded)
+            {
+                return wishlist;
+            }
+            throw new UnauthorizedAccessException("The wishlist doesn't belong to you.");
         }
         [Authorize]
         [HttpPost]
         public async Task<WishlistReadDto> CreateWishlistAsync([FromBody] WishlistCreateDto wishlist)
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
+            var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var userId = Guid.Parse(userClaims);
             return await _wishlistService.CreateWishlistAsync(userId, wishlist);
         }
@@ -53,33 +54,50 @@ namespace Server.Controller.src.Controller
         [HttpDelete("{id}")]
         public async Task<bool> DeleteWishlistByIdAsync([FromRoute] Guid id)
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
-            return await _wishlistService.DeleteWishlistByIdAsync(id);
+            var wishlist = await _wishlistService.GetWishlistByIdAsync(id);
+            var authorizationResult = await _authorizationService.AuthorizeAsync(HttpContext.User, wishlist, "ResourceOwner");
+            if (authorizationResult.Succeeded)
+            {
+                return await _wishlistService.DeleteWishlistByIdAsync(id);
+            }
+            throw new UnauthorizedAccessException("The wishlist doesn't belong to you.");
         }
         [Authorize]
         [HttpPatch("{id}")]
-        public async Task<WishlistReadDto> UpdateWishlistByIdAsync([FromBody] WishlistUpdateDto wishlist)
+        public async Task<WishlistReadDto> UpdateWishlistByIdAsync([FromRoute] Guid id, [FromBody] WishlistUpdateDto wishlistUpdateDto)
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
-            return await _wishlistService.UpdateWishlistByIdAsync(wishlist);
+            var wishlist = await _wishlistService.GetWishlistByIdAsync(id);
+            var authorizationResult = await _authorizationService.AuthorizeAsync(HttpContext.User, wishlist, "ResourceOwner");
+            if (authorizationResult.Succeeded)
+            {
+                return await _wishlistService.UpdateWishlistByIdAsync(id, wishlistUpdateDto);
+            }
+            throw new UnauthorizedAccessException("The wishlist doesn't belong to you.");
         }
         [Authorize]
         [HttpPost("{id}/add_product")]
-        public async Task<bool> AddProductToWishlishAsync([FromBody] Guid productId, [FromRoute] Guid wishlistId)
+        public async Task<bool> AddProductToWishlishAsync([FromBody] Guid productId, [FromRoute] Guid id)
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
-            return await _wishlistService.AddProductToWishlishAsync(productId, wishlistId);
+            var wishlist = await _wishlistService.GetWishlistByIdAsync(id);
+            var authorizationResult = await _authorizationService.AuthorizeAsync(HttpContext.User, wishlist, "ResourceOwner");
+            if (authorizationResult.Succeeded)
+            {
+                return await _wishlistService.AddProductToWishlishAsync(productId, id);
+            }
+            throw new UnauthorizedAccessException("The wishlist doesn't belong to you.");
         }
         [Authorize]
         [HttpDelete("{id}/delete_product")]
-        public async Task<bool> DeleteProductFromWishlishAsync([FromRoute] Guid wishlistId, [FromBody] Guid productId)
+        public async Task<bool> DeleteProductFromWishlishAsync([FromRoute] Guid id, [FromBody] Guid productId)
         {
-            var userClaims = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
-            return await _wishlistService.DeleteProductFromWishlishAsync(productId, wishlistId);
+            var wishlist = await _wishlistService.GetWishlistByIdAsync(id);
+            var authorizationResult = await _authorizationService.AuthorizeAsync(HttpContext.User, wishlist, "ResourceOwner");
+            if (authorizationResult.Succeeded)
+            {
+                return await _wishlistService.DeleteProductFromWishlishAsync(productId, id);
+            }
+            throw new UnauthorizedAccessException("The wishlist doesn't belong to you.");
+
         }
 
     }
