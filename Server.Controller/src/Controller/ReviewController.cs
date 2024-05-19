@@ -38,7 +38,6 @@ public class ReviewController : ControllerBase
     [HttpGet("product/{id}")]
     public async Task<IEnumerable<ReviewReadDto>> GetAllReviewsByProductIdAsync([FromQuery] QueryOptions options, [FromRoute] Guid id)
     {
-        if (id == Guid.Empty) throw new ArgumentNullException("Product Id should be valid");
         return await _reviewService.GetAllReviewsByProductIdAsync(options, id);
     }
 
