@@ -20,7 +20,6 @@ namespace Server.Core.src.Entity
         [Column(TypeName = "character varying(50)")]
         public string Country { get; set; }
 
-        [Required(ErrorMessage = "Postcode is required")]
         [PostalCode(ErrorMessage = "Invalid postal code")]
         public string Postcode { get; set; }
 

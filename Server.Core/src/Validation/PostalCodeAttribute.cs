@@ -1,20 +1,29 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 public class PostalCodeAttribute : ValidationAttribute
 {
-    public override bool IsValid(object value)
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
+        string? stringValue = value as string;
+
+        if (string.IsNullOrWhiteSpace(stringValue))
         {
-            // Postal code is not required, so it's considered valid if it's null or empty
-            return true;
+            return ValidationResult.Success;
         }
 
-        // Regular expression for postal code validation (adjust as needed for your specific requirements)
-        string postalCodePattern = @"^[1-9]\d{4}$"; // 5 digits, not starting with 
+        string postalCodePattern = @"^[1-9]\d{4}$"; //5 digits, not starting with 0
 
-        return System.Text.RegularExpressions.Regex.IsMatch(value.ToString(), postalCodePattern);
+        bool isValid = Regex.IsMatch(stringValue, postalCodePattern);
+        if (isValid)
+        {
+            return ValidationResult.Success;
+        }
+        else
+        {
+            return new ValidationResult("Not valid postcode");
+        }
     }
 }
