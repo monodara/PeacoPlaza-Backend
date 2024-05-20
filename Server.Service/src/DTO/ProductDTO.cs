@@ -4,7 +4,7 @@ namespace Server.Service.src.DTO;
 
 public class ProductReadDTO : BaseEntity
 {
-    public string Name { get; set; }
+    public string Title { get; set; }
     public decimal Price { get; set; }
     public string Description { get; set; }
     public IEnumerable<ProductImageReadDTO> ProductImages { get; set; }
@@ -13,7 +13,7 @@ public class ProductReadDTO : BaseEntity
     public CategoryReadDTO Category { get; set; }
     public void Transform(Product product)
     {
-        Name = product.Name;
+        Title = product.Title;
         Price = product.Price;
         Description = product.Description;
         // ProductImages = product.ProductImages;
@@ -25,7 +25,7 @@ public class ProductReadDTO : BaseEntity
 
 public class ProductCreateDTO
 {
-    public string Name { get; set; }
+    public string Title { get; set; }
     public decimal Price { get; set; }
     public string Description { get; set; }
     public int Inventory { get; set; }
@@ -35,7 +35,7 @@ public class ProductCreateDTO
 
 public class ProductUpdateDTO
 {
-    public string Name { get; set; }
+    public string Title { get; set; }
     public decimal Price { get; set; }
     public string Description { get; set; }
     public IEnumerable<ProductImageCreateDTO>? Images { get; set; }
@@ -44,7 +44,7 @@ public class ProductUpdateDTO
     public Guid CategoryId { get; set; }
     public Product UpdateProduct(Product oldProduct)
     {
-        oldProduct.Name = Name;
+        oldProduct.Title = Title;
         oldProduct.Price = Price;
         oldProduct.Description = Description;
         oldProduct.Inventory = Inventory;

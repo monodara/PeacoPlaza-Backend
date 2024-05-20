@@ -4,8 +4,8 @@ namespace Server.Core.src.Entity;
 
 public class Product : BaseEntity
 {
-    [Required(ErrorMessage = "Product name is required")]
-    public string Name { get; set; }
+    [Required(ErrorMessage = "Product title is required")]
+    public string Title { get; set; }
     [Required(ErrorMessage = "Product price is required")]
     [Range(1, Int32.MaxValue, ErrorMessage = "Price must be larger than 0")]
     public decimal Price { get; set; }
@@ -22,10 +22,10 @@ public class Product : BaseEntity
     public Category Category { get; set; }
     public List<ProductImage> ProductImages { get; set; }
     public IEnumerable<OrderProduct>? OrderProducts { get; set; }
-    public Product(string name, decimal price, string description, int inventory, decimal weight, Guid categoryId)
+    public Product(string title, decimal price, string description, int inventory, decimal weight, Guid categoryId)
     {
         Id = Guid.NewGuid();
-        Name = name;
+        Title = title;
         Price = price;
         Description = description;
         Inventory = inventory;

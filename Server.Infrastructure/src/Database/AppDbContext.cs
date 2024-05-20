@@ -55,7 +55,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Product>(e =>
         {
             e.HasData(SeedingData.Products);
-            e.HasIndex(p => p.Name).IsUnique();
+            e.HasIndex(p => p.Title).IsUnique();
         });
         // -----------------------------------------------------------------------------------------------
         modelBuilder.Entity<ProductImage>(e =>
