@@ -36,7 +36,7 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             var isEmailAvailable = await _userRepo.CheckEmailAsync(userCreateDto.Email);
             if (!isEmailAvailable)
             {
-                throw new ValidationException("Email has been registered. Maybe try to login...");
+                throw CustomException.BadRequestException("Email has been registered. Maybe try to login...");
             }
             var userToAdd = userCreateDto.CreateCustomer();
             userToAdd.Password = _pwdService.HashPassword(userCreateDto.Password, out byte[] salt);
@@ -50,7 +50,7 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             var isDeleted = await _userRepo.DeleteUserByIdAsync(id);
             if (!isDeleted)
             {
-                throw new ResourceNotFoundException("User is not found.");
+                throw CustomException.NotFoundException("User is not found.");
             }
             return true;
         }
@@ -68,11 +68,7 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             var user = await _userRepo.GetUserByIdAsync(id);
             if (user == null)
             {
-                throw new ResourceNotFoundException("No user found by this id.");
-            }
-            if (user == null)
-            {
-                throw new ResourceNotFoundException("No user found by this id.");
+                throw CustomException.NotFoundException("No user found by this id.");
             }
             return new UserReadDto().Transform(user);
         }
@@ -82,7 +78,7 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             var userToUpdate = await _userRepo.GetUserByIdAsync(userId);
             if (userToUpdate == null)
             {
-                throw new ResourceNotFoundException("No user found to update.");
+                throw CustomException.NotFoundException("No user found to update.");
             }
             var userNewInfo = user.UpdateUser(userToUpdate);
             var updatedUser = await _userRepo.UpdateUserByIdAsync(userNewInfo);
@@ -97,7 +93,7 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             var userToUpdate = await GetUserByIdAsync(id);
             if (userToUpdate == null)
             {
-                throw new ResourceNotFoundException("No user found by this id.");
+                throw CustomException.NotFoundException("No user found by this id.");
             }
             //hash password
             var hashedPwd = _pwdService.HashPassword(password, out byte[] salt);

@@ -22,21 +22,12 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
 
         public async Task<bool> DeleteAddressByIdAsync(Guid id)
         {
-            var isDeleted = await _addressRepo.DeleteAddressByIdAsync(id);
-            if (!isDeleted)
-            {
-                throw new ResourceNotFoundException("Address is not found.");
-            }
-            return true;
+            return await _addressRepo.DeleteAddressByIdAsync(id);
         }
 
         public async Task<AddressReadDto> GetAddressByIdAsync(Guid id)
         {
             var address = await _addressRepo.GetAddressByIdAsync(id);
-            if (address == null)
-            {
-                throw new ResourceNotFoundException("No Address found by this id.");
-            }
             return new AddressReadDto().Transform(address);
         }
 
@@ -50,8 +41,8 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
         public async Task<AddressReadDto> GetDefaultAddressAsync(Guid userId)
         {
             var defaultAddress = await _addressRepo.GetDefaultAddressAsync(userId);
-            if (defaultAddress == null)
-                throw new ResourceNotFoundException("The user doesn't have a default address.");
+            // if (defaultAddress == null)
+            //     throw new ResourceNotFoundException("The user doesn't have a default address.");
             return new AddressReadDto().Transform(defaultAddress);
         }
 
@@ -68,16 +59,16 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
         public async Task<AddressReadDto> UpdateAddressByIdAsync(Guid id, AddressUpdateDto address)
         {
             var addressToUpdate = await _addressRepo.GetAddressByIdAsync(id);
-            if (addressToUpdate == null)
-            {
-                throw new ResourceNotFoundException("No address found to update.");
-            }
+            // if (addressToUpdate == null)
+            // {
+            //     throw new ResourceNotFoundException("No address found to update.");
+            // }
             var addressNewInfo = address.UpdateAddress(addressToUpdate);
             var updatedAddress = await _addressRepo.UpdateAddressByIdAsync(addressNewInfo);
-            if (updatedAddress == null)
-            {
-                throw new InvalidOperationException("Updating address failed.");
-            }
+            // if (updatedAddress == null)
+            // {
+            //     throw new InvalidOperationException("Updating address failed.");
+            // }
             return new AddressReadDto().Transform(updatedAddress);
         }
     }

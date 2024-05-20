@@ -38,21 +38,22 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
 
         public async Task<bool> DeleteWishlistByIdAsync(Guid id)
         {
-            var isDeleted = await _wishlistRepo.DeleteWishlistByIdAsync(id);
-            if (!isDeleted)
-            {
-                throw new ResourceNotFoundException("Wishlist is not found.");
-            }
-            return true;
+            // var isDeleted = 
+            return await _wishlistRepo.DeleteWishlistByIdAsync(id);
+            // if (!isDeleted)
+            // {
+            //     throw new ResourceNotFoundException("Wishlist is not found.");
+            // }
+            // return true;
         }
 
         public async Task<WishlistReadDto> GetWishlistByIdAsync(Guid id)
         {
             var wishlist = await _wishlistRepo.GetWishlistByIdAsync(id);
-            if (wishlist == null)
-            {
-                throw new ResourceNotFoundException("No wishlist found by this id.");
-            }
+            // if (wishlist == null)
+            // {
+            //     throw new ResourceNotFoundException("No wishlist found by this id.");
+            // }
             return new WishlistReadDto().Transform(wishlist);
         }
 
@@ -65,16 +66,16 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
         public async Task<WishlistReadDto> UpdateWishlistByIdAsync(Guid id, WishlistUpdateDto wishlist)
         {
             var wishlistToUpdate = await _wishlistRepo.GetWishlistByIdAsync(id);
-            if (wishlistToUpdate == null)
-            {
-                throw new ResourceNotFoundException("No wishlist found to update.");
-            }
+            // if (wishlistToUpdate == null)
+            // {
+            //     throw new ResourceNotFoundException("No wishlist found to update.");
+            // }
             var wishlistNewInfo = wishlist.UpdateWishlist(wishlistToUpdate);
             var updatedWishlist = await _wishlistRepo.UpdateWishlistByIdAsync(wishlistNewInfo);
-            if (updatedWishlist == null)
-            {
-                throw new InvalidOperationException("Updating wishlist failed.");
-            }
+            // if (updatedWishlist == null)
+            // {
+            //     throw new InvalidOperationException("Updating wishlist failed.");
+            // }
             return new WishlistReadDto().Transform(updatedWishlist);
         }
     }
