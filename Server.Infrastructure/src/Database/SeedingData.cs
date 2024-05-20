@@ -63,15 +63,16 @@ public class SeedingData
     public static List<ProductImage> GetProductImages()
     {
         var productImages = new List<ProductImage>();
+        var paths = new List<string> { "src/Images/fi1.jpeg", "src/Images/fi2.jpeg", "src/Images/fi3.jpg" };
         foreach (var product in Products)
         {
             for (int i = 0; i < 3; i++)
             {
                 var productImage = new ProductImage
-                (
-                    $"https://picsum.photos/200/?random={random.Next(100, 1000)}",
-                    product.Id
-                );
+                {
+                    Data = File.ReadAllBytes(paths[i]),
+                    ProductId = product.Id
+                };
                 productImages.Add(productImage);
             }
         }
