@@ -21,7 +21,6 @@ using Swashbuckle.AspNetCore.Filters;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -87,11 +86,13 @@ builder.Services.AddScoped<IProductImageService, ProductImageService>();
 builder.Services.AddScoped<IProductImageRepo, ProductImageRepo>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductRepo, ProductRepo>();
-builder.Services.AddScoped<ExceptionHanlerMiddleware>();
+builder.Services.AddScoped<ExceptionHandlerMiddleware>();
 
 // register authorisation handler
 builder.Services.AddSingleton<IAuthorizationHandler, VerifyResourceOwnerHandler>();
 
+// add DI custom middleware
+builder.Services.AddTransient<ExceptionHandlerMiddleware>();
 // add authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(
@@ -102,7 +103,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Secrets:JwtKey"])),
             ValidateIssuer = true,
             ValidateAudience = false,
-            ValidateLifetime = true, //make sure it does not expire
+            ValidateLifetime = true, 
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Secrets:Issuer"]
         };
@@ -123,14 +124,16 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.RoutePrefix = string.Empty; // "/swagger/index.html"
+});
 
-app.UseMiddleware<ExceptionHanlerMiddleware>();
-
+app.UseCors(options => options.AllowAnyOrigin());
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseHttpsRedirection();
-
 app.MapControllers();
-
 app.UseHttpsRedirection();
 
 app.Run();

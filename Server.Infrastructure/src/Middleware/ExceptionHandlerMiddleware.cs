@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Server.Core.src.Common;
+using Server.Service.src.Shared;
 
 
 namespace Server.Infrastructure.src.Middleware
 {
-    public class ExceptionHanlerMiddleware : IMiddleware
+    public class ExceptionHandlerMiddleware : IMiddleware
     {
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
@@ -37,7 +38,7 @@ namespace Server.Infrastructure.src.Middleware
                     await context.Response.WriteAsync(ex.InnerException.Message);
                 }
             }
-            catch (AppException ex)
+            catch (CustomException ex)
             {
                 if (!context.Response.HasStarted)
                 {
