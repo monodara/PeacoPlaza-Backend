@@ -20,17 +20,17 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
         var allData = _data.Include("ProductImages").Include("Category").Skip(options.PageNo).Take(options.PageSize);
         if (options.sortType == SortType.byTitle && options.sortOrder == SortOrder.asc)
         {
-            return allData.OrderBy(item => item.Name).ToArray();
+            return await allData.OrderBy(item => item.Name).ToListAsync();
         }
         if (options.sortType == SortType.byTitle && options.sortOrder == SortOrder.desc)
         {
-            return allData.OrderByDescending(item => item.Name).ToArray();
+            return await allData.OrderByDescending(item => item.Name).ToListAsync();
         }
         if (options.sortType == SortType.byPrice && options.sortOrder == SortOrder.asc)
         {
-            return allData.OrderBy(item => item.Price).ToArray();
+            return await allData.OrderBy(item => item.Price).ToListAsync();
         }
-        return allData.OrderByDescending(item => item.Price).ToArray();
+        return await allData.OrderByDescending(item => item.Price).ToListAsync();
     }
 
     public IEnumerable<Product> GetByCategory(Guid categoryId)
@@ -38,10 +38,10 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
         return _data.Include("ProductImages").Include("Category").Where(products => products.Category.Id == categoryId);
     }
 
-    public override async Task<Product> GetOneByIdAsync(Guid id)
+    public override async Task<Product?> GetOneByIdAsync(Guid id)
     {
         var allData = _data.Include("ProductImages").Include("Category");
-        return allData.FirstOrDefault(product => product.Id == id);
+        return await allData.FirstOrDefaultAsync(product => product.Id == id);
     }
 
     public async Task<IEnumerable<Product>> GetMostPurchasedAsync(int topNumber)

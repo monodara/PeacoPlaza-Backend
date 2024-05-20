@@ -36,7 +36,7 @@ public class BaseRepo<T> : IBaseRepo<T> where T : BaseEntity
         return await _data.ToListAsync();
     }
 
-    public virtual async Task<T> GetOneByIdAsync(Guid id)
+    public virtual async Task<T?> GetOneByIdAsync(Guid id)
     {
         var data = await _data.FirstOrDefaultAsync(c => c.Id == id);
         return data;
