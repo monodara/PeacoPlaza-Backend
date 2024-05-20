@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Server.Core.src.Common;
 using Server.Service.src.DTO;
 using Server.Service.src.ServiceAbstract.EntityServiceAbstract;
+using Server.Service.src.Shared;
 
 
 namespace Server.Controller.src.Controller
@@ -26,13 +27,12 @@ namespace Server.Controller.src.Controller
         [HttpGet]
         public async Task<IEnumerable<UserReadDto>> GetAllUsersAsync([FromQuery] QueryOptions options)
         {
-            if (!HttpContext.User.Identity.IsAuthenticated)
+            if (HttpContext.User!.Identity == null || !HttpContext.User.Identity.IsAuthenticated)
             {
-                throw new InvalidOperationException("Please login to use this facility!");
+                throw CustomException.UnauthorizedException("");
             }
 
             var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
             if (userClaims == null)
             {
                 throw new InvalidOperationException("Invalid user claims.");
@@ -98,6 +98,10 @@ namespace Server.Controller.src.Controller
         public async Task<IActionResult> UploadAvatar([FromForm] UserForm userForm)
         {
             var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userClaims == null)
+            {
+                throw new InvalidOperationException("Invalid user claims.");
+            }
             var userId = Guid.Parse(userClaims);
             if (userForm.AvatarImage == null || userForm.AvatarImage.Length == 0)
             {
@@ -120,6 +124,7 @@ namespace Server.Controller.src.Controller
 
     public class UserForm
     {
+        
         public IFormFile AvatarImage { get; set; }
         public Guid UserId { get; set; }
     }
