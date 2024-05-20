@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.Service.src.DTO;
 using Server.Service.src.ServiceAbstract.EntityServiceAbstract;
+using Server.Service.src.Shared;
 
 namespace Server.Controller.src.Controller
 {
@@ -26,6 +27,10 @@ namespace Server.Controller.src.Controller
         public async Task<IEnumerable<WishlistReadDto>> GetWishlistByUsersAsync()
         {
             var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userClaims))
+            {
+                throw CustomException.UnauthorizedException("User is not authenticated.");
+            }
             var userId = Guid.Parse(userClaims);
             return await _wishlistService.GetWishlistByUserAsync(userId);
         }
@@ -47,6 +52,10 @@ namespace Server.Controller.src.Controller
         public async Task<WishlistReadDto> CreateWishlistAsync([FromBody] WishlistCreateDto wishlist)
         {
             var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userClaims))
+            {
+                throw CustomException.UnauthorizedException("User is not authenticated.");
+            }
             var userId = Guid.Parse(userClaims);
             return await _wishlistService.CreateWishlistAsync(userId, wishlist);
         }
