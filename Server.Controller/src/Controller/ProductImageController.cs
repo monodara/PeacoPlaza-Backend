@@ -1,7 +1,10 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Core.src.Common;
 using Server.Service.src.DTO;
 using Server.Service.src.ServiceAbstract.EntityServiceAbstract;
+using Server.Service.src.Shared;
 
 namespace Server.Controller.src.Controller
 {
@@ -16,17 +19,11 @@ namespace Server.Controller.src.Controller
             _productImageService = productImageService;
         }
 
-        [HttpGet("/{productId}")]
-        public async Task<IEnumerable<ProductImageReadDTO>> GetAllProductImagesAsync([FromQuery] QueryOptions options)
+        [HttpGet("product/{productId}")]
+        public async Task<IEnumerable<ProductImageReadDTO>> GetAllProductImagesAsync([FromRoute] Guid productId)
         {
-            try
-            {
-                return await _productImageService.GetAllProductImagesAsync(options);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            Console.WriteLine(productId);
+            return await _productImageService.GetAllProductImagesAsync(productId);
         }
 
         [HttpGet("{id}")]
@@ -35,7 +32,7 @@ namespace Server.Controller.src.Controller
             return await _productImageService.GetProductImageById(id);
         }
 
-        [HttpPost("/")]
+        [HttpPost]
         public async Task<ProductImageReadDTO> CreateProductImageByIdAsync([FromBody] ProductImageCreateDTO productImg)
         {
             return await _productImageService.CreateProductImage(productImg);
@@ -45,9 +42,20 @@ namespace Server.Controller.src.Controller
         {
             return await _productImageService.UpdateProductImage(id, category);
         }
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id:guid}")]
-        public async Task<bool> DeleteCategoryAsync([FromRoute] Guid id)
+        public async Task<bool> DeleteImageAsync([FromRoute] Guid id)
         {
+            if (HttpContext.User!.Identity == null || !HttpContext.User.Identity.IsAuthenticated)
+            {
+                throw CustomException.UnauthorizedException("");
+            }
+
+            var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userClaims == null)
+            {
+                throw CustomException.UnauthorizedException("");
+            }
             return await _productImageService.DeleteProductImage(id);
         }
     }

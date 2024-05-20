@@ -37,9 +37,10 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             }
         }
 
-        public async Task<IEnumerable<ProductImageReadDTO>> GetAllProductImagesAsync(QueryOptions options)
+        public async Task<IEnumerable<ProductImageReadDTO>> GetAllProductImagesAsync(Guid productId)
         {
-            var r = await _productImageRepo.GetAllAsync(options);
+            Console.WriteLine(productId);
+            var r = await _productImageRepo.GetImageByProductAsync(productId);
             return _mapper.Map<IEnumerable<ProductImage>, IEnumerable<ProductImageReadDTO>>(r);
         }
 
