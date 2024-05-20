@@ -26,7 +26,7 @@ public class OrderReadDto
             {
                 Product = new ProductReadDTO
                 {
-                    Name = op.Product.Name,
+                    Title = op.Product.Title,
                     Price = op.Product.Price,
                     // ProductImages = op.Product.ProductImages.Select(pi => new ProductImageReadDTO { /* map properties */ })
                 },

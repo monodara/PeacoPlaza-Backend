@@ -48,35 +48,79 @@ public class SeedingData
     public static List<Product> GetProducts()
     {
         var products = new List<Product>();
-        products.AddRange(GenerateProductsForCategory(category1, 20));
-        products.AddRange(GenerateProductsForCategory(category2, 20));
-        products.AddRange(GenerateProductsForCategory(category3, 20));
-        products.AddRange(GenerateProductsForCategory(category4, 20));
-        products.AddRange(GenerateProductsForCategory(category5, 20));
-        products.AddRange(GenerateProductsForCategory(category6, 20));
+        products.AddRange(GenerateProductsForCategory(category1, 10));
+        products.AddRange(GenerateProductsForCategory(category2, 10));
+        products.AddRange(GenerateProductsForCategory(category3, 10));
+        products.AddRange(GenerateProductsForCategory(category4, 10));
+        products.AddRange(GenerateProductsForCategory(category5, 10));
+        products.AddRange(GenerateProductsForCategory(category6, 10));
 
         return products;
     }
 
     public static List<Product> Products = GetProducts();
 
+    // public static List<ProductImage> GetProductImages()
+    // {
+    //     var productImages = new List<ProductImage>();
+    //     var paths = new List<string> { "src/Images/fi1.jpeg", "src/Images/fi2.jpeg" };
+    //     foreach (var product in Products)
+    //     {
+    //         for (int i = 0; i < 2; i++)
+    //         {
+    //             var productImage = new ProductImage
+    //             {
+    //                 Data = File.ReadAllBytes(paths[i]),
+    //                 ProductId = product.Id
+    //             };
+    //             productImages.Add(productImage);
+    //         }
+    //     }
+    //     return productImages;
+    // }
     public static List<ProductImage> GetProductImages()
     {
-        var productImages = new List<ProductImage>();
-        var paths = new List<string> { "src/Images/fi1.jpeg", "src/Images/fi2.jpeg", "src/Images/fi3.jpg" };
-        foreach (var product in Products)
+        var paths = new List<string> { "src/Images/fi1.jpeg", "src/Images/fi2.jpeg" };
+        var data = new List<byte[]> { };
+        var images = new List<ProductImage> { };
+        var products = Products;
+        foreach (var path in paths)
         {
-            for (int i = 0; i < 3; i++)
+            try
             {
-                var productImage = new ProductImage
-                {
-                    Data = File.ReadAllBytes(paths[i]),
-                    ProductId = product.Id
-                };
-                productImages.Add(productImage);
+                var imageData = File.ReadAllBytes(path);
+                data.Add(imageData);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"error reading file {path}, error: {e.Message}");
             }
         }
-        return productImages;
+
+        foreach (var product in products)
+        {
+            foreach (var d in data)
+            {
+                try
+                {
+                    var image = new ProductImage
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        ProductId = product.Id,
+                        Data = d
+                    };
+
+                    images.Add(image);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"{ex.Message}");
+                }
+            }
+        }
+        return images;
     }
 
     public static List<User> GetUsers()

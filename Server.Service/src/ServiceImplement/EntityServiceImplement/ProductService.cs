@@ -44,8 +44,9 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
 
         public async Task<IEnumerable<ProductReadDTO>> GetAllProductsAsync(QueryOptions options)
         {
-            var r = await _productRepo.GetAllAsync(options);
-            return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductReadDTO>>(r);
+            var result = await _productRepo.GetAllAsync(options);
+            return result.Select(p=>new ProductReadDTO().Transform(p));
+            // return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductReadDTO>>(r);
         }
 
         public async Task<IEnumerable<ProductReadDTO>> GetAllProductsByCategoryAsync(Guid categoryId)

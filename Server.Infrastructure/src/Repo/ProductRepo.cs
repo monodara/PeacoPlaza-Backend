@@ -20,11 +20,11 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
         var allData = _data.Include("ProductImages").Include("Category").Skip(options.PageNo).Take(options.PageSize);
         if (options.sortType == SortType.byTitle && options.sortOrder == SortOrder.asc)
         {
-            return await allData.OrderBy(item => item.Name).ToListAsync();
+            return await allData.OrderBy(item => item.Title).ToListAsync();
         }
         if (options.sortType == SortType.byTitle && options.sortOrder == SortOrder.desc)
         {
-            return await allData.OrderByDescending(item => item.Name).ToListAsync();
+            return await allData.OrderByDescending(item => item.Title).ToListAsync();
         }
         if (options.sortType == SortType.byPrice && options.sortOrder == SortOrder.asc)
         {

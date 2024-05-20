@@ -11,15 +11,18 @@ public class ProductReadDTO : BaseEntity
     public int Inventory { get; set; }
     public decimal Weight { get; set; }
     public CategoryReadDTO Category { get; set; }
-    public void Transform(Product product)
+    public ProductReadDTO Transform(Product product)
     {
         Title = product.Title;
         Price = product.Price;
         Description = product.Description;
-        // ProductImages = product.ProductImages;
+        ProductImages = product.ProductImages.Select(img=>new ProductImageReadDTO().Transform(img)).ToList();
         Inventory = product.Inventory;
         Weight = product.Weight;
-        // Category = product.Category;
+        var categoryReadDTO = new CategoryReadDTO();
+        categoryReadDTO.Transform(product.Category);
+        Category = categoryReadDTO;
+        return this;
     }
 }
 
