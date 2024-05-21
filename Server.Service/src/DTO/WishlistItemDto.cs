@@ -4,11 +4,9 @@ namespace Server.Service.src.DTO
 {
     public class WishlistItemReadDto
     {
-        public ProductReadDTO Product { get; set; }
+        public ProductReadDto Product { get; set; }
         public WishlistItemReadDto Transform(WishlistItem wishlistItem){
-            var productReadDto = new ProductReadDTO();
-            productReadDto.Transform(wishlistItem.Product);
-            Product = productReadDto;
+            Product = new ProductReadDto().Transform(wishlistItem.Product);
             return this;
         }
     }

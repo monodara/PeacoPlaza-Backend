@@ -23,7 +23,7 @@ public class PaymentController : ControllerBase
 
     [Authorize]
     [HttpGet]
-    public async Task<IEnumerable<ReadPaymentDTO>> GetAllPaymentsOfOrders([FromQuery] QueryOptions options)
+    public async Task<IEnumerable<ReadPaymentDto>> GetAllPaymentsOfOrders([FromQuery] QueryOptions options)
     {
         try
         {
@@ -43,7 +43,7 @@ public class PaymentController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<ReadPaymentDTO> CreatePaymentOfOrder([FromBody] CreatePaymentDTO payment)
+    public async Task<ReadPaymentDto> CreatePaymentOfOrder([FromBody] CreatePaymentDto payment)
     {
         return await _paymentService.CreatePaymentOfOrder(payment);
     }

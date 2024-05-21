@@ -2,7 +2,7 @@ using Server.Core.src.Entity;
 
 namespace Server.Service.src.DTO;
 
-public class ProductReadDto : BaseEntity
+public class ProductReadDto
 {
     public string Title { get; set; }
     public decimal Price { get; set; }

@@ -11,30 +11,30 @@ public class MapperProfile : Profile
         CreateMap<UserCreateDto, User>();
         CreateMap<UserUpdateDto, User>().ForAllMembers(opt => opt.Condition((src, dest, member) => member != null));
 
-        CreateMap<Category, CategoryReadDTO>();
-        CreateMap<CategoryCreateDTO, Category>();
-        CreateMap<CategoryUpdateDTO, Category>().ForAllMembers(opt => opt.Condition((src, dest, member) => member != null));
+        CreateMap<Category, CategoryReadDto>();
+        CreateMap<CategoryCreateDto, Category>();
+        CreateMap<CategoryUpdateDto, Category>().ForAllMembers(opt => opt.Condition((src, dest, member) => member != null));
 
-        CreateMap<Product, ProductReadDTO>();
-        CreateMap<ProductCreateDTO, Product>();
-        CreateMap<ProductUpdateDTO, Product>().ForAllMembers(opt => opt.Condition((src, dest, member) => member != null));
+        CreateMap<Product, ProductReadDto>();
+        CreateMap<ProductCreateDto, Product>();
+        CreateMap<ProductUpdateDto, Product>().ForAllMembers(opt => opt.Condition((src, dest, member) => member != null));
 
-        CreateMap<ProductImage, ProductImageReadDTO>();
-        CreateMap<ProductImageCreateDTO, ProductImage>();
-        CreateMap<ProductImageUpdateDTO, ProductImage>().ForAllMembers(opt => opt.Condition((src, dest, member) => member != null));
+        CreateMap<ProductImage, ProductImageReadDto>();
+        CreateMap<ProductImageCreateDto, ProductImage>();
+        CreateMap<ProductImageUpdateDto, ProductImage>().ForAllMembers(opt => opt.Condition((src, dest, member) => member != null));
 
-        // CreateMap<Review, ReviewReadDTO>();
-        // CreateMap<ReviewCreateDTO, Review>();
-        // CreateMap<ReviewUpdateDTO, Review>().ForAllMembers(opt => opt.Condition((src, dest, member) => member != null));
+        // CreateMap<Review, ReviewReadDto>();
+        // CreateMap<ReviewCreateDto, Review>();
+        // CreateMap<ReviewUpdateDto, Review>().ForAllMembers(opt => opt.Condition((src, dest, member) => member != null));
 
-        // CreateMap<Order, OrderReadDTO>()
+        // CreateMap<Order, OrderReadDto>()
         //     .ForMember(dest => dest.User, opt => opt.MapFrom(s => s.User));
-        // CreateMap<OrderCreateDTO, Order>()
+        // CreateMap<OrderCreateDto, Order>()
         //     .ForMember(dest => dest.User, opt => opt.Ignore())
         //     .ForMember(dest => dest.OrderProducts, opt => opt.MapFrom(s => s.OrderProducts));
-        // CreateMap<OrderUpdateDTO, Order>().ForAllMembers(opt => opt.Condition((src, dest, member) => member != null));
+        // CreateMap<OrderUpdateDto, Order>().ForAllMembers(opt => opt.Condition((src, dest, member) => member != null));
 
-        // CreateMap<OrderProduct, OrderProductReadDTO>();
-        // CreateMap<OrderProductCreateDTO, OrderProduct>();
+        // CreateMap<OrderProduct, OrderProductReadDto>();
+        // CreateMap<OrderProductCreateDto, OrderProduct>();
     }
 }
