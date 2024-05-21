@@ -14,21 +14,21 @@ public class PaymentService : IPaymentService
     {
         _paymentrepo = paymentrepo;
     }
-    public async Task<ReadPaymentDTO> CreatePaymentOfOrder(CreatePaymentDTO payment)
+    public async Task<ReadPaymentDto> CreatePaymentOfOrder(CreatePaymentDto payment)
     {
         if (payment == null)
             throw new ArgumentNullException("Payment information cannot be null or empty");
         var paymentObj = payment.CreatePayment();
         var paymentDetail = await _paymentrepo.CreatePaymentOfOrder(paymentObj);
         if (paymentDetail == null) throw new InvalidOperationException("Payment cannot be completed");
-        return new ReadPaymentDTO().ReadPayment(paymentDetail);
+        return new ReadPaymentDto().ReadPayment(paymentDetail);
     }
 
-    public async Task<IEnumerable<ReadPaymentDTO>> GetAllPaymentsOfOrders(QueryOptions options, Guid userId)
+    public async Task<IEnumerable<ReadPaymentDto>> GetAllPaymentsOfOrders(QueryOptions options, Guid userId)
     {
         if (userId == Guid.Empty)
             throw new ArgumentNullException("User Id cannot be empty");
         var paymentsDetails = await _paymentrepo.GetAllPaymentsOfOrders(options, userId);
-        return paymentsDetails.Select(payment => new ReadPaymentDTO().ReadPayment(payment));
+        return paymentsDetails.Select(payment => new ReadPaymentDto().ReadPayment(payment));
     }
 }

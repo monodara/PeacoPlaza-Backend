@@ -5,10 +5,10 @@ namespace Server.Service.src.ServiceAbstract.EntityServiceAbstract
 {
     public interface IProductImageService
     {
-        Task<IEnumerable<ProductImageReadDTO>> GetAllProductImagesAsync(Guid productId);
-        Task<ProductImageReadDTO> GetProductImageById(Guid id);
-        Task<ProductImageReadDTO> CreateProductImage(ProductImageCreateDTO prodImg);
-        Task<ProductImageReadDTO> UpdateProductImage(Guid id, ProductImageUpdateDTO prodImg);
+        Task<IEnumerable<ProductImageReadDto>> GetAllProductImagesAsync(Guid productId);
+        Task<ProductImageReadDto> GetProductImageById(Guid id);
+        Task<ProductImageReadDto> CreateProductImage(ProductImageCreateDto prodImg);
+        Task<ProductImageReadDto> UpdateProductImage(Guid id, ProductImageUpdateDto prodImg);
         Task<bool> DeleteProductImage(Guid id);
     }
 }

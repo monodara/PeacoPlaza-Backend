@@ -17,31 +17,31 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             _categoryRepo = categoryRepo;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<CategoryReadDTO>> GetAllCategoriesAsync(QueryOptions options)
+        public async Task<IEnumerable<CategoryReadDto>> GetAllCategoriesAsync(QueryOptions options)
         {
             var r = await _categoryRepo.GetAllAsync(options);
-            return _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryReadDTO>>(r);
+            return _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryReadDto>>(r);
         }
-        public async Task<CategoryReadDTO> GetCategoryById(Guid id)
+        public async Task<CategoryReadDto> GetCategoryById(Guid id)
         {
             var result = await _categoryRepo.GetOneByIdAsync(id);
             if (result is not null)
             {
-                return _mapper.Map<Category, CategoryReadDTO>(result);
+                return _mapper.Map<Category, CategoryReadDto>(result);
             }
             else
             {
                 throw CustomException.NotFoundException("Id not found");
             }
         }
-        public async Task<CategoryReadDTO> CreateCategory(CategoryCreateDTO category)
+        public async Task<CategoryReadDto> CreateCategory(CategoryCreateDto category)
         {
-            var categoryEntity = _mapper.Map<CategoryCreateDTO, Category>(category);
+            var categoryEntity = _mapper.Map<CategoryCreateDto, Category>(category);
             categoryEntity.ParentCategoryId = category.ParentCategoryId; // set ParentCategoryId property
             var result = await _categoryRepo.CreateOneAsync(categoryEntity);
-            return _mapper.Map<Category, CategoryReadDTO>(result);
+            return _mapper.Map<Category, CategoryReadDto>(result);
         }
-        async Task<CategoryReadDTO> ICategoryService.UpdateCategory(Guid id, CategoryUpdateDTO category)
+        async Task<CategoryReadDto> ICategoryService.UpdateCategory(Guid id, CategoryUpdateDto category)
         {
 
             var foundItem = await _categoryRepo.GetOneByIdAsync(id);
@@ -52,7 +52,7 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
                     foundItem.ParentCategoryId = null;
                 }
                 var result = await _categoryRepo.UpdateOneByIdAsync(_mapper.Map(category, foundItem));
-                return _mapper.Map<Category, CategoryReadDTO>(result);
+                return _mapper.Map<Category, CategoryReadDto>(result);
             }
             else
             {

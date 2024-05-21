@@ -2,7 +2,7 @@ using Server.Core.src.Entity;
 
 namespace Server.Service.src.DTO;
 
-public class CategoryReadDTO : BaseEntity
+public class CategoryReadDto : BaseEntity
 {
     public string Name { get; set; }
     public string Image { get; set; }
@@ -15,14 +15,14 @@ public class CategoryReadDTO : BaseEntity
     }
 }
 
-public class CategoryCreateDTO
+public class CategoryCreateDto
 {
     public string Name { get; set; }
     public string Image { get; set; }
     public Guid? ParentCategoryId{get; set;}
 }
 
-public class CategoryUpdateDTO
+public class CategoryUpdateDto
 {
     public string Name { get; set; }
     public string Image { get; set; }

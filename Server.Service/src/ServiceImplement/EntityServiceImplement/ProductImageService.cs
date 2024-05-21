@@ -17,10 +17,10 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             _productImageRepo = productImageRepo;
             _mapper = mapper;
         }
-        public async Task<ProductImageReadDTO> CreateProductImage(ProductImageCreateDTO prodImg)
+        public async Task<ProductImageReadDto> CreateProductImage(ProductImageCreateDto prodImg)
         {
-            var result = await _productImageRepo.CreateOneAsync(_mapper.Map<ProductImageCreateDTO, ProductImage>(prodImg));
-            return _mapper.Map<ProductImage, ProductImageReadDTO>(result);
+            var result = await _productImageRepo.CreateOneAsync(_mapper.Map<ProductImageCreateDto, ProductImage>(prodImg));
+            return _mapper.Map<ProductImage, ProductImageReadDto>(result);
         }
 
         public async Task<bool> DeleteProductImage(Guid id)
@@ -37,19 +37,19 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             }
         }
 
-        public async Task<IEnumerable<ProductImageReadDTO>> GetAllProductImagesAsync(Guid productId)
+        public async Task<IEnumerable<ProductImageReadDto>> GetAllProductImagesAsync(Guid productId)
         {
             Console.WriteLine(productId);
             var r = await _productImageRepo.GetImageByProductAsync(productId);
-            return _mapper.Map<IEnumerable<ProductImage>, IEnumerable<ProductImageReadDTO>>(r);
+            return _mapper.Map<IEnumerable<ProductImage>, IEnumerable<ProductImageReadDto>>(r);
         }
 
-        public async Task<ProductImageReadDTO> GetProductImageById(Guid id)
+        public async Task<ProductImageReadDto> GetProductImageById(Guid id)
         {
             var result = await _productImageRepo.GetOneByIdAsync(id);
             if (result is not null)
             {
-                return _mapper.Map<ProductImage, ProductImageReadDTO>(result);
+                return _mapper.Map<ProductImage, ProductImageReadDto>(result);
             }
             else
             {
@@ -57,13 +57,13 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             }
         }
 
-        public async Task<ProductImageReadDTO> UpdateProductImage(Guid id, ProductImageUpdateDTO prodImg)
+        public async Task<ProductImageReadDto> UpdateProductImage(Guid id, ProductImageUpdateDto prodImg)
         {
             var foundItem = await _productImageRepo.GetOneByIdAsync(id);
             if (foundItem is not null)
             {
                 var result = await _productImageRepo.UpdateOneByIdAsync(_mapper.Map(prodImg, foundItem));
-                return _mapper.Map<ProductImage, ProductImageReadDTO>(result);
+                return _mapper.Map<ProductImage, ProductImageReadDto>(result);
             }
             else
             {

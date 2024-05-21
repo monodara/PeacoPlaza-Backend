@@ -22,10 +22,10 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             _categoryRepo = categoryRepo;
         }
 
-        public async Task<ProductReadDTO> CreateProduct(ProductCreateDTO product)
+        public async Task<ProductReadDto> CreateProduct(ProductCreateDto product)
         {
-            var result = await _productRepo.CreateOneAsync(_mapper.Map<ProductCreateDTO, Product>(product));
-            return _mapper.Map<Product, ProductReadDTO>(result);
+            var result = await _productRepo.CreateOneAsync(_mapper.Map<ProductCreateDto, Product>(product));
+            return _mapper.Map<Product, ProductReadDto>(result);
         }
 
         public async Task<bool> DeleteProduct(Guid id)
@@ -42,20 +42,20 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             }
         }
 
-        public async Task<IEnumerable<ProductReadDTO>> GetAllProductsAsync(QueryOptions options)
+        public async Task<IEnumerable<ProductReadDto>> GetAllProductsAsync(QueryOptions options)
         {
             var result = await _productRepo.GetAllAsync(options);
-            return result.Select(p=>new ProductReadDTO().Transform(p));
-            // return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductReadDTO>>(r);
+            return result.Select(p=>new ProductReadDto().Transform(p));
+            // return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductReadDto>>(r);
         }
 
-        public async Task<IEnumerable<ProductReadDTO>> GetAllProductsByCategoryAsync(Guid categoryId)
+        public async Task<IEnumerable<ProductReadDto>> GetAllProductsByCategoryAsync(Guid categoryId)
         {
             var foundCategory = await _categoryRepo.GetOneByIdAsync(categoryId);
             if (foundCategory is not null)
             {
                 var result = _productRepo.GetByCategory(categoryId);
-                return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductReadDTO>>(result);
+                return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductReadDto>>(result);
             }
             else
             {
@@ -63,18 +63,18 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             }
         }
 
-        public async Task<IEnumerable<ProductReadDTO>> GetMostPurchasedProductsAsync(int top)
+        public async Task<IEnumerable<ProductReadDto>> GetMostPurchasedProductsAsync(int top)
         {
             var result = await _productRepo.GetMostPurchasedAsync(top);
-            return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductReadDTO>>(result);
+            return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductReadDto>>(result);
         }
 
-        public async Task<ProductReadDTO> GetProductById(Guid id)
+        public async Task<ProductReadDto> GetProductById(Guid id)
         {
             var result = await _productRepo.GetOneByIdAsync(id);
             if (result is not null)
             {
-                return _mapper.Map<Product, ProductReadDTO>(result);
+                return _mapper.Map<Product, ProductReadDto>(result);
             }
             else
             {
@@ -82,13 +82,13 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             }
         }
 
-        public async Task<ProductReadDTO> UpdateProduct(Guid id, ProductUpdateDTO product)
+        public async Task<ProductReadDto> UpdateProduct(Guid id, ProductUpdateDto product)
         {
             var foundItem = await _productRepo.GetOneByIdAsync(id);
             if (foundItem is not null)
             {
                 var result = await _productRepo.UpdateOneByIdAsync(_mapper.Map(product, foundItem));
-                return _mapper.Map<Product, ProductReadDTO>(result);
+                return _mapper.Map<Product, ProductReadDto>(result);
             }
             else
             {
@@ -96,7 +96,7 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             }
         }
 
-        public async Task<IEnumerable<ProductReadDTO>> GetAllProductsByCategoryAndSubcategoriesAsync(Guid categoryId)
+        public async Task<IEnumerable<ProductReadDto>> GetAllProductsByCategoryAndSubcategoriesAsync(Guid categoryId)
         {
             var products = await GetAllProductsByCategoryAsync(categoryId);
 
@@ -110,10 +110,10 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             return products;
         }
 
-        public async Task<IEnumerable<ProductReadDTO>> GetTopRatedProductsAsync(int top)
+        public async Task<IEnumerable<ProductReadDto>> GetTopRatedProductsAsync(int top)
         {
             var result = await _productRepo.GetTopRatedProductsAsync(top);
-            return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductReadDTO>>(result);
+            return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductReadDto>>(result);
         }
     }
 }

@@ -24,11 +24,11 @@ public class OrderReadDto
             DateOfDelivery = order.DateOfDelivery,
             OrderProducts = order.OrderProducts.Select(op => new OrderProductReadDto
             {
-                Product = new ProductReadDTO
+                Product = new ProductReadDto
                 {
                     Title = op.Product.Title,
                     Price = op.Product.Price,
-                    // ProductImages = op.Product.ProductImages.Select(pi => new ProductImageReadDTO { /* map properties */ })
+                    // ProductImages = op.Product.ProductImages.Select(pi => new ProductImageReadDto { /* map properties */ })
                 },
                 Quantity = op.Quantity
             })

@@ -49,15 +49,15 @@ public class ReviewService : IReviewService
         return new ReviewReadDto().ReadReviews(result);
     }
 
-    public async Task<ReviewReadDto> UpdateReviewByIdAsync(Guid reviewId, UpdateReviewsDTO updateReviewsDTO)
+    public async Task<ReviewReadDto> UpdateReviewByIdAsync(Guid reviewId, UpdateReviewsDto updateReviewsDto)
     {
         if (reviewId == Guid.Empty) throw new ArgumentNullException("Review Id cannot be empty");
-        if (updateReviewsDTO == null) throw new ArgumentNullException("Review cannot be null");
+        if (updateReviewsDto == null) throw new ArgumentNullException("Review cannot be null");
 
         var review = await _reviewrepo.GetReviewByIdAsync(reviewId);
 
         if (review == null) throw new InvalidDataException("The review Id provided is incorrect");
-        var updatedReview = updateReviewsDTO.UpdateReview(review);
+        var updatedReview = updateReviewsDto.UpdateReview(review);
 
         var result = await _reviewrepo.UpdateReviewByIdAsync(reviewId, updatedReview);
         return new ReviewReadDto().ReadReviews(result);

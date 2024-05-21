@@ -41,12 +41,12 @@ public class ReviewCreateDto
     }
 }
 
-public class UpdateReviewsDTO
+public class UpdateReviewsDto
 {
     public double Rating { get; set; }
     public string Comment { get; set; } = string.Empty;
 
-    public UpdateReviewsDTO(double rating, string comment)
+    public UpdateReviewsDto(double rating, string comment)
     {
         Rating = rating;
         Comment = comment;

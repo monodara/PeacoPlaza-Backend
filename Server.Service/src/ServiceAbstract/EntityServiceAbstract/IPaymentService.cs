@@ -6,6 +6,6 @@ namespace Server.Service.src.ServiceAbstract.EntityServiceAbstract;
 
 public interface IPaymentService
 {
-    public Task<IEnumerable<ReadPaymentDTO>> GetAllPaymentsOfOrders(QueryOptions options, Guid userId);
-    public Task<ReadPaymentDTO> CreatePaymentOfOrder(CreatePaymentDTO payment);
+    public Task<IEnumerable<ReadPaymentDto>> GetAllPaymentsOfOrders(QueryOptions options, Guid userId);
+    public Task<ReadPaymentDto> CreatePaymentOfOrder(CreatePaymentDto payment);
 }

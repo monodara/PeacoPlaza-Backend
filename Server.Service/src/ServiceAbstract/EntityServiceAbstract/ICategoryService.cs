@@ -6,10 +6,10 @@ namespace Server.Service.src.ServiceAbstract.EntityServiceAbstract
 {
     public interface ICategoryService
     {
-        public Task<IEnumerable<CategoryReadDTO>> GetAllCategoriesAsync(QueryOptions options);
-        public Task<CategoryReadDTO> GetCategoryById(Guid id);
-        public Task<CategoryReadDTO> CreateCategory(CategoryCreateDTO category);
-        public Task<CategoryReadDTO> UpdateCategory(Guid id, CategoryUpdateDTO category);
+        public Task<IEnumerable<CategoryReadDto>> GetAllCategoriesAsync(QueryOptions options);
+        public Task<CategoryReadDto> GetCategoryById(Guid id);
+        public Task<CategoryReadDto> CreateCategory(CategoryCreateDto category);
+        public Task<CategoryReadDto> UpdateCategory(Guid id, CategoryUpdateDto category);
         public Task<bool> DeleteCategory(Guid id);
         // public Task<IEnumerable<Category>> GetAllSubcategories(Guid categoryId);
 
