@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Server.Core.src.Common;
 using Server.Service.src.DTO;
 using Server.Service.src.ServiceAbstract.AuthServiceAbstract;
+using Server.Service.src.Shared;
 
 namespace Server.Controller.src.Controller;
 
@@ -22,15 +23,15 @@ public class AuthController : ControllerBase
         try
         {
             var token = await _authService.LoginAsync(userCredential);
-            return CreatedAtAction(nameof(LoginAsync), token);
+            return Ok(token); // Return 200 OK with the token
         }
-        catch (AuthenticationException ex)
+        catch (CustomException ex)
         {
-            return Unauthorized(ex.Message);
+            return StatusCode(ex.StatusCode, ex.Message); // Use the StatusCode from CustomException
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex.Message);
+            return StatusCode(500, ex.Message); // Return 500 Internal Server Error for general exceptions
         }
     }
 }
