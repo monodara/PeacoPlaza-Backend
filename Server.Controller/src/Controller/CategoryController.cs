@@ -18,25 +18,25 @@ namespace Server.Controller.src.Controller
         }
 
         [HttpGet]
-        public async Task<IEnumerable<CategoryReadDTO>> GetAllCategoriesAsync([FromQuery] QueryOptions options)
+        public async Task<IEnumerable<CategoryReadDto>> GetAllCategoriesAsync([FromQuery] QueryOptions options)
         {
             return await _categoryServices.GetAllCategoriesAsync(options);
         }
 
         [HttpGet("{id}")]
-        public async Task<CategoryReadDTO> GetCategoryByIdAsync([FromRoute] Guid id)
+        public async Task<CategoryReadDto> GetCategoryByIdAsync([FromRoute] Guid id)
         {
             return await _categoryServices.GetCategoryById(id);
         }
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<CategoryReadDTO> CreateCategoryAsync([FromBody] CategoryCreateDTO category)
+        public async Task<CategoryReadDto> CreateCategoryAsync([FromBody] CategoryCreateDto category)
         {
             return await _categoryServices.CreateCategory(category);
         }
         [Authorize(Roles = "Admin")]
         [HttpPatch("{id}")]
-        public async Task<CategoryReadDTO> UpdateCategoryAsync([FromRoute] Guid id, [FromBody] CategoryUpdateDTO category)
+        public async Task<CategoryReadDto> UpdateCategoryAsync([FromRoute] Guid id, [FromBody] CategoryUpdateDto category)
         {
             return await _categoryServices.UpdateCategory(id, category);
         }

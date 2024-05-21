@@ -20,39 +20,39 @@ namespace Server.Controller.src.Controller
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ProductReadDTO>> GetAllProductsAsync([FromQuery] QueryOptions options)
+        public async Task<IEnumerable<ProductReadDto>> GetAllProductsAsync([FromQuery] QueryOptions options)
         {
             return await _productServices.GetAllProductsAsync(options);
         }
         [HttpGet("{id}")]
-        public async Task<ProductReadDTO> GetProductByIdAsync([FromRoute] Guid id)
+        public async Task<ProductReadDto> GetProductByIdAsync([FromRoute] Guid id)
         {
             return await _productServices.GetProductById(id);
         }
         [HttpGet("category/{categoryId}")]
-        public async Task<IEnumerable<ProductReadDTO>> GetAllProductsByCategoryAsync([FromRoute] Guid categoryId)
+        public async Task<IEnumerable<ProductReadDto>> GetAllProductsByCategoryAsync([FromRoute] Guid categoryId)
         {
             return await _productServices.GetAllProductsByCategoryAndSubcategoriesAsync(categoryId);
         }
         [HttpGet("most_purchased/{topNumber:int}")]
-        public async Task<IEnumerable<ProductReadDTO>> GetMostPurchasedAsync([FromRoute] int topNumber)
+        public async Task<IEnumerable<ProductReadDto>> GetMostPurchasedAsync([FromRoute] int topNumber)
         {
             return await _productServices.GetMostPurchasedProductsAsync(topNumber);
         }
         [HttpGet("top_rated/{topNumber:int}")]
-        public async Task<IEnumerable<ProductReadDTO>> GetTopRatedAsync([FromRoute] int topNumber)
+        public async Task<IEnumerable<ProductReadDto>> GetTopRatedAsync([FromRoute] int topNumber)
         {
             return await _productServices.GetTopRatedProductsAsync(topNumber);
         }   
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<ProductReadDTO> CreateProductAsync([FromBody] ProductCreateDTO product)
+        public async Task<ProductReadDto> CreateProductAsync([FromBody] ProductCreateDto product)
         {
             return await _productServices.CreateProduct(product);
         }
         [Authorize(Roles = "Admin")]
         [HttpPatch("{id}")]
-        public async Task<ProductReadDTO> UpdateProductAsync([FromRoute] Guid id, [FromBody] ProductUpdateDTO category)
+        public async Task<ProductReadDto> UpdateProductAsync([FromRoute] Guid id, [FromBody] ProductUpdateDto category)
         {
             return await _productServices.UpdateProduct(id, category);
         }

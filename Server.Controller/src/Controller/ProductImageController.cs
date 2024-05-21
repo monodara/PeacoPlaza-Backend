@@ -20,25 +20,25 @@ namespace Server.Controller.src.Controller
         }
 
         [HttpGet("product/{productId}")]
-        public async Task<IEnumerable<ProductImageReadDTO>> GetAllProductImagesAsync([FromRoute] Guid productId)
+        public async Task<IEnumerable<ProductImageReadDto>> GetAllProductImagesAsync([FromRoute] Guid productId)
         {
             Console.WriteLine(productId);
             return await _productImageService.GetAllProductImagesAsync(productId);
         }
 
         [HttpGet("{id}")]
-        public async Task<ProductImageReadDTO> GetProductImageByIdAsync([FromRoute] Guid id)
+        public async Task<ProductImageReadDto> GetProductImageByIdAsync([FromRoute] Guid id)
         {
             return await _productImageService.GetProductImageById(id);
         }
 
         [HttpPost]
-        public async Task<ProductImageReadDTO> CreateProductImageByIdAsync([FromBody] ProductImageCreateDTO productImg)
+        public async Task<ProductImageReadDto> CreateProductImageByIdAsync([FromBody] ProductImageCreateDto productImg)
         {
             return await _productImageService.CreateProductImage(productImg);
         }
         [HttpPatch("{id:guid}")]
-        public async Task<ProductImageReadDTO> UpdateProductImageAsync([FromRoute] Guid id, [FromBody] ProductImageUpdateDTO category)
+        public async Task<ProductImageReadDto> UpdateProductImageAsync([FromRoute] Guid id, [FromBody] ProductImageUpdateDto category)
         {
             return await _productImageService.UpdateProductImage(id, category);
         }

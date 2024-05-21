@@ -56,7 +56,7 @@ public class ReviewController : ControllerBase
     }
 
     [HttpPatch("{id}")]
-    public async Task<ReviewReadDto> UpdateReviewByIdAsync([FromRoute] Guid id, [FromBody] UpdateReviewsDTO updateReview)
+    public async Task<ReviewReadDto> UpdateReviewByIdAsync([FromRoute] Guid id, [FromBody] UpdateReviewsDto updateReview)
     {
         return await _reviewService.UpdateReviewByIdAsync(id, updateReview);
     }
