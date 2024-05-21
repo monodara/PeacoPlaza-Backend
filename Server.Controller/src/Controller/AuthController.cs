@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Server.Core.src.Common;
 using Server.Service.src.DTO;
@@ -16,8 +17,20 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("api/v1/auth/login")]
-    public async Task<string> LoginAsync([FromBody] UserCredential userCredential)
+    public async Task<ActionResult<string>> LoginAsync([FromBody] UserCredential userCredential)
     {
-        return await _authService.LoginAsync(userCredential);
+        try
+        {
+            var token = await _authService.LoginAsync(userCredential);
+            return CreatedAtAction(nameof(LoginAsync), token);
+        }
+        catch (AuthenticationException ex)
+        {
+            return Unauthorized(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }
