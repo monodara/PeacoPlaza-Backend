@@ -25,7 +25,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //add all controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers(
+    Options =>
+    {
+        Options.SuppressAsyncSuffixInActionNames = false;
+    }
+);
 // .AddJsonOptions(options =>
 //         {
 //             options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
@@ -120,6 +125,14 @@ builder.Services.AddAuthorization(options =>
 // add automapper dependency injection
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOriginPolicy",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -130,7 +143,8 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = string.Empty; // "/swagger/index.html"
 });
 
-app.UseCors(options => options.AllowAnyOrigin());
+// app.UseCors(options => options.AllowAnyOrigin());
+app.UseCors("AllowAnyOriginPolicy");
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseHttpsRedirection();
 app.MapControllers();

@@ -41,17 +41,16 @@ namespace Server.Controller.src.Controller
         }
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<UserReadDto> GetUserByIdAsync([FromRoute] Guid id)
+        public async Task<ActionResult<UserReadDto>> GetUserByIdAsync([FromRoute] Guid id)
         {
             var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
             var userReadDto = await _userService.GetUserByIdAsync(id);
-
-            if (userReadDto.AvatarBase64 != null && userReadDto.Avatar.Data != null)
+            if (userReadDto == null)
             {
-                userReadDto.AvatarBase64 = Convert.ToBase64String(userReadDto.Avatar.Data);
+                return NotFound();
             }
-            return userReadDto;
+            return Ok(userReadDto);
         }
         [Authorize]
         [HttpGet("profile")]
@@ -61,11 +60,32 @@ namespace Server.Controller.src.Controller
             var userId = Guid.Parse(claims.FindFirst(ClaimTypes.NameIdentifier).Value);
             return await _userService.GetUserByIdAsync(userId);
         }
-
         [HttpPost]
-        public async Task<UserReadDto> CreateCustomerAsync([FromBody] UserCreateDto user)
+        public async Task<ActionResult<UserReadDto>> CreateCustomerAsync([FromBody] UserCreateDto user)
         {
-            return await _userService.CreateCustomerAsync(user);
+            if (user == null)
+            {
+                return BadRequest("User data is required");
+            }
+            try
+            {
+                var createdUser = await _userService.CreateCustomerAsync(user);
+                if (createdUser == null)
+                {
+                    return BadRequest("User could not be created");
+                }
+                Console.WriteLine(createdUser.Id);
+                return CreatedAtAction(nameof(CreateCustomerAsync), new { id = createdUser.Id }, createdUser);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("check-email")]
+        public async Task<bool> CheckEmailAsync([FromBody] EmailRequest request)
+        {
+            return await _userService.CheckEmailAsync(request.Email);
         }
         [Authorize]
         [HttpDelete("{id}")]
@@ -123,9 +143,12 @@ namespace Server.Controller.src.Controller
     }
 
     public class UserForm
-    {
-        
+    {  
         public IFormFile AvatarImage { get; set; }
         public Guid UserId { get; set; }
+    }
+    public class EmailRequest
+    {
+        public string Email { get; set; }
     }
 }

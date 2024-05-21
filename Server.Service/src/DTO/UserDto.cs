@@ -10,8 +10,8 @@ namespace Server.Service.src.DTO
         public string Email { get; set; }
         public Role Role { get; set; }
         public Guid DefaultAddressId { get; set; }
-        public Avatar Avatar { get; set; }
-        public string AvatarBase64 { get; set; }
+        public Avatar? Avatar { get; set; }
+        public string? AvatarBase64 { get; set; }
 
         public UserReadDto Transform(User user)
         {
