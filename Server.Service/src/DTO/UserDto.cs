@@ -8,7 +8,7 @@ namespace Server.Service.src.DTO
         public Guid Id { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
-        public Role Role { get; set; }
+        public string Role { get; set; }
         public Guid DefaultAddressId { get; set; }
         public Avatar? Avatar { get; set; }
         public string? AvatarBase64 { get; set; }
@@ -18,7 +18,7 @@ namespace Server.Service.src.DTO
             Id = user.Id;
             UserName = user.UserName;
             Email = user.Email;
-            Role = user.Role;
+            Role = user.Role.ToString();
             DefaultAddressId = user.DefaultAddressId;
             Avatar = user.Avatar;
             if (user.Avatar != null && user.Avatar.Data != null)
