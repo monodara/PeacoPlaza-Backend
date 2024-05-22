@@ -67,7 +67,7 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
 
     public async Task<IEnumerable<Product>> GetTopRatedProductsAsync(int topNumber)
     {
-        var topRatedProducts = await _data
+        var topRatedProducts = await _data.Include("ProductImages").Include("Category")
         .Select(product => new
         {
             Product = product,

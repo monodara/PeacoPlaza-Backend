@@ -66,7 +66,7 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
         public async Task<IEnumerable<ProductReadDto>> GetMostPurchasedProductsAsync(int top)
         {
             var result = await _productRepo.GetMostPurchasedAsync(top);
-            return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductReadDto>>(result);
+            return result.Select(p => new ProductReadDto().Transform(p));
         }
 
         public async Task<ProductReadDto> GetProductById(Guid id)
@@ -113,7 +113,7 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
         public async Task<IEnumerable<ProductReadDto>> GetTopRatedProductsAsync(int top)
         {
             var result = await _productRepo.GetTopRatedProductsAsync(top);
-            return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductReadDto>>(result);
+            return result.Select(p => new ProductReadDto().Transform(p));
         }
     }
 }
