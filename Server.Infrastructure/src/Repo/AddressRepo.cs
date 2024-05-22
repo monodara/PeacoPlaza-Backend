@@ -81,12 +81,12 @@ namespace Server.Infrastructure.src.Repo
             }
 
             // Apply sorting if sort type and sort order are specified
-            if (options.sortType.HasValue && options.sortOrder.HasValue)
+            if (options.SortBy.HasValue && options.OrderBy.HasValue)
             {
-                switch (options.sortType.Value)
+                switch (options.SortBy.Value)
                 {
-                    case SortType.byCity:
-                        query = options.sortOrder.Value == SortOrder.asc ? query.OrderBy(a => a.City) : query.OrderByDescending(a => a.City);
+                    case SortType.ByCity:
+                        query = options.OrderBy.Value == SortOrder.Ascending ? query.OrderBy(a => a.City) : query.OrderByDescending(a => a.City);
                         break;
                 }
             }

@@ -2,10 +2,10 @@ namespace Server.Core.src.ValueObject
 {
     public enum SortType
     {
-        byTitle,
-        byPrice,
-        byName,
-        byCity
+        ByTitle,
+        ByPrice,
+        ByName,
+        ByCity
 
     }
 }

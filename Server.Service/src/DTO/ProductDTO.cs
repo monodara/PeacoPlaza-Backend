@@ -4,6 +4,7 @@ namespace Server.Service.src.DTO;
 
 public class ProductReadDto
 {
+    public Guid Id { get; set;}
     public string Title { get; set; }
     public decimal Price { get; set; }
     public string Description { get; set; }
@@ -13,6 +14,7 @@ public class ProductReadDto
     public CategoryReadDto Category { get; set; }
     public ProductReadDto Transform(Product product)
     {
+        Id = product.Id;
         Title = product.Title;
         Price = product.Price;
         Description = product.Description;

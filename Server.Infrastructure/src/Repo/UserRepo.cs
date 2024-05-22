@@ -73,18 +73,18 @@ namespace Server.Infrastructure.src.Repo
             }
 
             // Apply sorting if sort type and sort order are specified
-            if (options.sortType.HasValue && options.sortOrder.HasValue)
+            if (options.SortBy.HasValue && options.OrderBy.HasValue)
             {
-                switch (options.sortType.Value)
+                switch (options.SortBy.Value)
                 {
-                    case SortType.byName:
-                        query = options.sortOrder.Value == SortOrder.asc ? query.OrderBy(u => u.UserName) : query.OrderByDescending(u => u.UserName);
+                    case SortType.ByName:
+                        query = options.OrderBy.Value == SortOrder.Ascending ? query.OrderBy(u => u.UserName) : query.OrderByDescending(u => u.UserName);
                         break;
                 }
             }
 
             // Apply pagination
-            int skipCount = options.PageSize * (options.PageNo-1);
+            int skipCount = options.PageSize * (options.PageNo - 1);
             query = query.Skip(skipCount).Take(options.PageSize);
 
             return await query.ToListAsync();
@@ -93,7 +93,7 @@ namespace Server.Infrastructure.src.Repo
         public async Task<User> GetUserByIdAsync(Guid id)
         {
             var user = await _context.Users
-                        .Include(u => u.Avatar) 
+                        .Include(u => u.Avatar)
                         .FirstOrDefaultAsync(u => u.Id == id);
             return user;
         }

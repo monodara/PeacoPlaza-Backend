@@ -10,28 +10,67 @@ namespace Server.Infrastructure.src.Repo;
 public class ProductRepo : BaseRepo<Product>, IProductRepo
 {
     private DbSet<OrderProduct> _orderProducts;
+    private DbSet<Category> _categories;
     public ProductRepo(AppDbContext context) : base(context)
     {
         _orderProducts = context.OrderProducts;
+        _categories = context.Categories;
     }
 
     public override async Task<IEnumerable<Product>> GetAllAsync(QueryOptions options)
     {
-        var allData = _data.Include("ProductImages").Include("Category").Skip(options.PageNo).Take(options.PageSize);
-        if (options.sortType == SortType.byTitle && options.sortOrder == SortOrder.asc)
+        IQueryable<Product> filteredData;
+        if (options.CategoriseBy is not null && !string.IsNullOrEmpty(options.CategoriseBy))
         {
-            return await allData.OrderBy(item => item.Title).ToListAsync();
+            var categoryId = Guid.Parse(options.CategoriseBy);
+            var productsByCategory = await GetByCategoryAsync(categoryId);
+            filteredData = productsByCategory;
         }
-        if (options.sortType == SortType.byTitle && options.sortOrder == SortOrder.desc)
+        else
         {
-            return await allData.OrderByDescending(item => item.Title).ToListAsync();
+            filteredData = _data.Include("ProductImages").Include("Category");
         }
-        if (options.sortType == SortType.byPrice && options.sortOrder == SortOrder.asc)
+
+        // Apply search keyword filter if provided
+        if (!string.IsNullOrEmpty(options.SearchKey))
         {
-            return await allData.OrderBy(item => item.Price).ToListAsync();
+            filteredData = filteredData.Where(item => item.Title.ToUpper().Contains(options.SearchKey.ToUpper()));
         }
-        return await allData.OrderByDescending(item => item.Price).ToListAsync();
+        // Apply minimum price filter if provided
+        if (!string.IsNullOrEmpty(options.MinPrice))
+        {
+            decimal minPrice = Convert.ToDecimal(options.MinPrice);
+            Console.WriteLine(minPrice);
+            filteredData = filteredData.Where(item => item.Price >= minPrice);
+        }
+        // Apply maximum price filter if provided
+        if (!string.IsNullOrEmpty(options.MaxPrice))
+        {
+            decimal maxPrice = Convert.ToDecimal(options.MaxPrice);
+            Console.WriteLine(maxPrice);
+            filteredData = filteredData.Where(item => item.Price <= maxPrice);
+        }
+
+        if (options.SortBy == SortType.ByTitle && options.OrderBy == SortOrder.Ascending)
+        {
+            filteredData = filteredData.OrderBy(item => item.Title);
+        }
+        else if (options.SortBy == SortType.ByTitle && options.OrderBy == SortOrder.Descending)
+        {
+            filteredData = filteredData.OrderByDescending(item => item.Title);
+        }
+        else if (options.SortBy == SortType.ByPrice && options.OrderBy == SortOrder.Ascending)
+        {
+            filteredData = filteredData.OrderBy(item => item.Price);
+        }
+        else
+        {
+            filteredData = filteredData.OrderByDescending(item => item.Price);
+        }
+        return await filteredData.Skip(options.PageNo).Take(options.PageSize).ToListAsync();
+
     }
+
 
     public IEnumerable<Product> GetByCategory(Guid categoryId)
     {
@@ -81,5 +120,58 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
         .ToListAsync();
 
         return topRatedProducts;
+    }
+
+    public async Task<int> GetProductsCount(QueryOptions options)
+    {
+        IQueryable<Product> filteredData;
+        if (options.CategoriseBy is not null && !string.IsNullOrEmpty(options.CategoriseBy))
+        {
+            var categoryId = Guid.Parse(options.CategoriseBy);
+            var productsByCategory = await GetByCategoryAsync(categoryId);
+            filteredData = productsByCategory.AsQueryable();
+        }
+        else
+        {
+            filteredData = _data.Include("ProductImages").Include("Category");
+        }
+        // Apply minimum price filter if provided
+        if (!string.IsNullOrEmpty(options.MinPrice))
+        {
+            decimal minPrice = Convert.ToDecimal(options.MinPrice);
+            filteredData = filteredData.Where(item => item.Price >= minPrice);
+        }
+        // Apply maximum price filter if provided
+        if (!string.IsNullOrEmpty(options.MaxPrice))
+        {
+            decimal maxPrice = Convert.ToDecimal(options.MaxPrice);
+            filteredData = filteredData.Where(item => item.Price <= maxPrice);
+        }
+        return await filteredData.CountAsync();
+    }
+
+    public async Task<IQueryable<Product>> GetByCategoryAsync(Guid categoryId)
+    {
+        var allCategoryIds = new List<Guid> { categoryId };
+        allCategoryIds.AddRange(await GetAllSubCategoryIdsAsync(categoryId));
+
+        return _data
+            .Include(p => p.ProductImages)
+            .Include(p => p.Category)
+            .Where(p => allCategoryIds.Contains(p.Category.Id));
+    }
+    private async Task<List<Guid>> GetAllSubCategoryIdsAsync(Guid parentId)
+    {
+        var subCategoryIds = await _categories
+                                           .Where(c => c.ParentCategoryId == parentId)
+                                           .Select(c => c.Id)
+                                           .ToListAsync();
+
+        var allSubCategoryIds = new List<Guid>(subCategoryIds);
+        foreach (var subCategoryId in subCategoryIds)
+        {
+            allSubCategoryIds.AddRange(await GetAllSubCategoryIdsAsync(subCategoryId));
+        }
+        return allSubCategoryIds;
     }
 }

@@ -24,6 +24,11 @@ namespace Server.Controller.src.Controller
         {
             return await _productServices.GetAllProductsAsync(options);
         }
+        [HttpGet("count")]
+        public async Task<int> GetProductsCount([FromQuery] QueryOptions options)
+        {
+            return await _productServices.GetProductsCount(options);
+        }
         [HttpGet("{id}")]
         public async Task<ProductReadDto> GetProductByIdAsync([FromRoute] Guid id)
         {

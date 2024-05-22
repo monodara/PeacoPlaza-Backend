@@ -115,5 +115,10 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             var result = await _productRepo.GetTopRatedProductsAsync(top);
             return result.Select(p => new ProductReadDto().Transform(p));
         }
+
+        public async Task<int> GetProductsCount(QueryOptions options)
+        {
+            return await _productRepo.GetProductsCount(options);
+        }
     }
 }

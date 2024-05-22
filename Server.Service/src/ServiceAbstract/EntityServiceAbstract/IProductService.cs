@@ -6,6 +6,7 @@ namespace Server.Service.src.ServiceAbstract.EntityServiceAbstract
     public interface IProductService
     {
         Task<IEnumerable<ProductReadDto>> GetAllProductsAsync(QueryOptions options);
+        Task<int> GetProductsCount(QueryOptions options);
         Task<ProductReadDto> GetProductById(Guid id);
         Task<ProductReadDto> CreateProduct(ProductCreateDto prodImg);
         Task<ProductReadDto> UpdateProduct(Guid id, ProductUpdateDto prodImg);
