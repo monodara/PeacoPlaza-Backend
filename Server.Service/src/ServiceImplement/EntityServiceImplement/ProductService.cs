@@ -72,14 +72,7 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
         public async Task<ProductReadDto> GetProductById(Guid id)
         {
             var result = await _productRepo.GetOneByIdAsync(id);
-            if (result is not null)
-            {
-                return _mapper.Map<Product, ProductReadDto>(result);
-            }
-            else
-            {
-                throw CustomException.NotFoundException("Id not found");
-            }
+            return new ProductReadDto().Transform(result);
         }
 
         public async Task<ProductReadDto> UpdateProduct(Guid id, ProductUpdateDto product)
