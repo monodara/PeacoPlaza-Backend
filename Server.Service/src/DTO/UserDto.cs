@@ -19,7 +19,7 @@ namespace Server.Service.src.DTO
             Email = user.Email;
             Role = user.Role.ToString();
             DefaultAddressId = user.DefaultAddressId;
-            Avatar = new AvatarReadDto().Transform(user.Avatar);
+            if(user.Avatar is not null) Avatar = new AvatarReadDto().Transform(user.Avatar);
             return this;
         }
     }

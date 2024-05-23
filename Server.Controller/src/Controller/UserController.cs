@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using Server.Service.src.Shared;
 namespace Server.Controller.src.Controller
 {
     [ApiController]
+    // [EnableCors("AllowAnyOriginPolicy")]
     [Route("api/v1/users")]
     public class UserController : ControllerBase
     {
@@ -70,11 +72,6 @@ namespace Server.Controller.src.Controller
             try
             {
                 var createdUser = await _userService.CreateCustomerAsync(user);
-                if (createdUser == null)
-                {
-                    return BadRequest("User could not be created");
-                }
-                Console.WriteLine(createdUser.Id);
                 return CreatedAtAction(nameof(CreateCustomerAsync), new { id = createdUser.Id }, createdUser);
             }
             catch (Exception ex)
@@ -100,6 +97,7 @@ namespace Server.Controller.src.Controller
         [HttpPatch("{id}")]
         public async Task<UserReadDto> UpdateUserByIdAsync([FromRoute] Guid id, [FromBody] UserUpdateDto userUpdateDto)
         {
+            Console.WriteLine("id" + id);
             var userClaims = (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new InvalidOperationException("Please login to use this facility!");
             return await _userService.UpdateUserByIdAsync(id, userUpdateDto);
         }
