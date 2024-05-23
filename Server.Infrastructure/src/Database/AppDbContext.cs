@@ -56,6 +56,9 @@ public class AppDbContext : DbContext
         {
             e.HasData(SeedingData.Products);
             e.HasIndex(p => p.Title).IsUnique();
+            e.HasCheckConstraint("CK_Product_Inventory", "[Inventory] > 0");
+            e.HasCheckConstraint("CK_Product_Price", "[Price] > 0");
+            e.HasCheckConstraint("CK_Product_Weight", "[Weight] > 0");
         });
         // -----------------------------------------------------------------------------------------------
         modelBuilder.Entity<ProductImage>(e =>
@@ -91,11 +94,21 @@ public class AppDbContext : DbContext
         // -----------------------------------------------------------------------------------------------
         modelBuilder.Entity<OrderProduct>(entity =>
         {
-            entity.HasOne(op => op.Review)
-            .WithOne(r => r.OrderProduct)
-            .HasForeignKey<Review>(r => r.OrderProductId);
             entity.HasData(SeedingData.OrderProducts);
         });
+        modelBuilder.Entity<OrderProduct>()
+            .HasOne(op => op.Order)
+            .WithMany(o => o.OrderProducts)
+            .HasForeignKey(op => op.OrderId);
+        modelBuilder.Entity<OrderProduct>()
+        .HasOne(op => op.Product)
+        .WithMany(p => p.OrderProducts)
+        .HasForeignKey(op => op.ProductId);
+        modelBuilder.Entity<OrderProduct>()
+            .HasOne(op => op.Review)
+            .WithOne(r => r.OrderProduct)
+            .HasForeignKey<Review>(r => r.OrderProductId);
+
 
         base.OnModelCreating(modelBuilder);
     }
