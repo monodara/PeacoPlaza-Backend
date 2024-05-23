@@ -115,7 +115,7 @@ namespace Server.Controller.src.Controller
 
         [HttpPost("upload-avatar"), Authorize]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UploadAvatar([FromForm] UserForm userForm)
+        public async Task<ActionResult<UserReadDto>> UploadAvatarAsync([FromForm] UserForm userForm)
         {
             var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userClaims == null)
@@ -133,9 +133,10 @@ namespace Server.Controller.src.Controller
                 {
                     await userForm.AvatarImage.CopyToAsync(ms);
                     var content = ms.ToArray();
-                    var uploaded = await _userService.UploadAvatarAsync(userId, content);
-                    if(uploaded)
-                        return File(content, userForm.AvatarImage.ContentType);
+                    var updatedUser = await _userService.UploadAvatarAsync(userId, content);
+                    if (updatedUser is not null)
+                        return CreatedAtAction(nameof(UploadAvatarAsync), updatedUser.Id, updatedUser);
+
                     throw new DbUpdateException("Failed to upload avatar...");
                 }
             }
@@ -143,7 +144,7 @@ namespace Server.Controller.src.Controller
     }
 
     public class UserForm
-    {  
+    {
         public IFormFile AvatarImage { get; set; }
         public Guid UserId { get; set; }
     }

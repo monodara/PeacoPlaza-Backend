@@ -93,7 +93,7 @@ namespace Server.Infrastructure.src.Repo
         public async Task<User> GetUserByIdAsync(Guid id)
         {
             var user = await _context.Users
-                        .Include(u => u.Avatar)
+                        .Include("Avatar")
                         .FirstOrDefaultAsync(u => u.Id == id);
             return user;
         }
@@ -123,7 +123,7 @@ namespace Server.Infrastructure.src.Repo
             return await _context.Users.FirstOrDefaultAsync(user => user.Email == email);
         }
 
-        public async Task<bool> UploadAvatarAsync(Guid userId, byte[] data)
+        public async Task<User> UploadAvatarAsync(Guid userId, byte[] data)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -149,13 +149,13 @@ namespace Server.Infrastructure.src.Repo
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync(); // commit
-                return true;
+                return await GetUserByIdAsync(userId);
             }
             catch (Exception ex)
             {
                 // roll back
                 await transaction.RollbackAsync();
-                return false;
+                return null;
             }
         }
     }

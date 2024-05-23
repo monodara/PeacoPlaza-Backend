@@ -100,9 +100,10 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             return await _userRepo.ChangePasswordAsync(id, hashedPwd, salt);
         }
 
-        public async Task<bool> UploadAvatarAsync(Guid userId, byte[] data)
+        public async Task<UserReadDto> UploadAvatarAsync(Guid userId, byte[] data)
         {
-            return await _userRepo.UploadAvatarAsync(userId, data);
+            var result = await _userRepo.UploadAvatarAsync(userId, data);
+            return new UserReadDto().Transform(result);
         }
     }
 }

@@ -4,10 +4,14 @@ namespace Server.Service.src.DTO
 {
     public class AvatarReadDto
     {
-        public byte[] Data { get; set; }
+        public Guid Id;
+        public string Data { get; set; }
+        public Guid UserId;
         public AvatarReadDto Transform(Avatar avatar)
         {
-            Data = avatar.Data;
+            Id = avatar.Id;
+            Data = "data:image/jpeg;base64," + Convert.ToBase64String(avatar.Data);
+            UserId = avatar.UserId;
             return this;
         }
     }

@@ -4,13 +4,15 @@ namespace Server.Service.src.DTO;
 
 public class CategoryReadDto : BaseEntity
 {
+    public Guid Id;
     public string Name { get; set; }
     public string Image { get; set; }
     public Guid? ParentCategoryId { get; set; }
     public void Transform(Category category)
     {
-        category.Name = Name;
-        category.Image = Image;
+        Id = category.Id;
+        Name = category.Name;
+        Image = category.Image;
         ParentCategoryId = category.ParentCategoryId;
     }
 }

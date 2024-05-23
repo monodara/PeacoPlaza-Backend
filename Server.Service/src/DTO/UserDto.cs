@@ -10,8 +10,7 @@ namespace Server.Service.src.DTO
         public string Email { get; set; }
         public string Role { get; set; }
         public Guid DefaultAddressId { get; set; }
-        public Avatar? Avatar { get; set; }
-        public string? AvatarBase64 { get; set; }
+        public AvatarReadDto? Avatar { get; set; }
 
         public UserReadDto Transform(User user)
         {
@@ -20,11 +19,7 @@ namespace Server.Service.src.DTO
             Email = user.Email;
             Role = user.Role.ToString();
             DefaultAddressId = user.DefaultAddressId;
-            Avatar = user.Avatar;
-            if (user.Avatar != null && user.Avatar.Data != null)
-            {
-                AvatarBase64 = Convert.ToBase64String(user.Avatar.Data);
-            }
+            Avatar = new AvatarReadDto().Transform(user.Avatar);
             return this;
         }
     }

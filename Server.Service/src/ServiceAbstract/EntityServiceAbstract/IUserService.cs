@@ -14,6 +14,6 @@ namespace Server.Service.src.ServiceAbstract.EntityServiceAbstract
         // Task<UserReadDto> CreateAdminAsync(UserCreateDto user);
         Task<bool> CheckEmailAsync(string email);
         Task<bool> ChangePasswordAsync(Guid id, string password);
-        Task<bool> UploadAvatarAsync(Guid userId, byte[] data);
+        Task<UserReadDto> UploadAvatarAsync(Guid userId, byte[] data);
     }
 }
