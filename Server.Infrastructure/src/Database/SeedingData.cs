@@ -2,6 +2,7 @@ using Server.Core.src.Entity;
 using Server.Core.src.ValueObject;
 using Server.Service.src.ServiceAbstract.AuthServiceAbstract;
 using Server.Service.src.Shared;
+using System;
 
 namespace Server.Infrastructure.src.Database;
 
@@ -17,7 +18,6 @@ public class SeedingData
     private static Category category5 = new Category("Toys and Games", $"https://picsum.photos/200/?random={random.Next(10)}");
     private static Category category6 = new Category("Sports", $"https://picsum.photos/200/?random={random.Next(10)}");
 
-
     public static List<Category> GetCategories()
     {
         return new List<Category>
@@ -25,7 +25,6 @@ public class SeedingData
             category1, category2, category3, category4, category5, category6
         };
     }
-
 
     private static List<Product> GenerateProductsForCategory(Category category, int count)
     {
@@ -114,21 +113,36 @@ public class SeedingData
         user2.Password = pwdService.HashPassword(user2.Password, out byte[] salt2);
         user2.Salt = salt2;
         users.Add(user2);
+
+        for (int i = 3; i <= 10; i++)
+        {
+            var user = new User($"Customer{i}", $"customer_{i}@mail.com", "Password1234");
+            user.Password = pwdService.HashPassword(user.Password, out byte[] salt);
+            user.Salt = salt;
+            users.Add(user);
+        }
+
         return users;
     }
     public static List<User> Users = GetUsers();
 
     public static List<Address> GetAddresses()
     {
-        var user = Users[1];
-        var address = new Address(
-                "41C", "Asemakatu", "Pori", "Finland", "61200", "4198767000", "John", "Mull", "K-market",
-                user.Id
-            );
-        var addresses = new List<Address>
+        var addresses = new List<Address>();
+        var address1 = new Address(
+            "41C", "Asemakatu", "Pori", "Finland", "61200", "4198767000", "John", "Mull", "K-market",
+            Users[1].Id
+        );
+        addresses.Add(address1);
+        for (int i = 1; i < Users.Count; i++)
         {
-            address
-        }; 
+            var address = new Address(
+                $"Street {i}", $"City {i}", $"State {i}", "Country", $"ZIP{i}", $"Phone{i}", $"FirstName{i}", $"LastName{i}", $"AddressLine{i}",
+                Users[i].Id
+            );
+            addresses.Add(address);
+        }
+
         return addresses;
     }
     public static List<Address> Addresses = GetAddresses();
@@ -149,22 +163,56 @@ public class SeedingData
 
     public static List<WishlistItem> GetWishlistItems()
     {
-        var wishlistItem = new WishlistItem(Products[0].Id, Wishlists[0].Id);
-        return new List<WishlistItem>{wishlistItem};
+        var wishlistItems = new List<WishlistItem>();
+        foreach (var wishlist in Wishlists)
+        {
+            wishlistItems.Add(new WishlistItem(Products[random.Next(Products.Count)].Id, wishlist.Id));
+        }
+        return wishlistItems;
     }
+
     public static List<Order> GetOrders()
     {
-        var order = new Order{UserId = Users[1].Id, AddressId = Addresses[0].Id};
-        return new List<Order>{order};
+        var orders = new List<Order>();
+
+
+        var order1 = new Order { UserId = Users[1].Id, AddressId = Addresses[0].Id };
+        orders.Add(order1);
+
+        for (int i = 1; i < Users.Count; i++)
+        {
+            var order = new Order { UserId = Users[i].Id, AddressId = Addresses[i].Id };
+            orders.Add(order);
+        }
+
+        return orders;
     }
     public static List<Order> Orders = GetOrders();
+
     public static List<OrderProduct> GetOrderProducts()
     {
         var orderProducts = new List<OrderProduct>();
-        var orderProduct1 = new OrderProduct{OrderId = Orders[0].Id, ProductId = Products[0].Id, Quantity = 3};
-        var orderProduct2 = new OrderProduct{OrderId = Orders[0].Id, ProductId = Products[1].Id, Quantity = 1};
+
+        
+        var orderProduct1 = new OrderProduct { OrderId = Orders[0].Id, ProductId = Products[0].Id, Quantity = 3 };
+        var orderProduct2 = new OrderProduct { OrderId = Orders[0].Id, ProductId = Products[1].Id, Quantity = 1 };
         orderProducts.Add(orderProduct1);
         orderProducts.Add(orderProduct2);
+
+        foreach (var order in Orders)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                var orderProduct = new OrderProduct
+                {
+                    OrderId = order.Id,
+                    ProductId = Products[random.Next(Products.Count)].Id,
+                    Quantity = random.Next(1, 5)
+                };
+                orderProducts.Add(orderProduct);
+            }
+        }
+
         return orderProducts;
     }
     public static List<OrderProduct> OrderProducts = GetOrderProducts();
