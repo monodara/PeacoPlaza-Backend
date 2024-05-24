@@ -6,12 +6,13 @@ using Server.Infrastructure.src.Database;
 using Server.Service.src.DTO;
 using Server.Service.src.ServiceAbstract.EntityServiceAbstract;
 using Server.Service.src.ServiceImplement.EntityServiceImplement;
+using Server.Service.src.Shared;
 
 namespace Server.Test.src.Service
 {
     public class AddressServiceTests
     {
-        private readonly User user = SeedingData.GetUsers()[0];
+        private readonly User user = new Mock<User>("username", "email", "password").Object;
         [Fact]
         public async Task CreateAddressAsync_ValidAddress_ReturnsAddressReadDto()
         {
@@ -32,7 +33,7 @@ namespace Server.Test.src.Service
 
 
         [Fact]
-        public async Task UpdateAddressByIdAsync_AddressNotFound_ThrowsResourceNotFoundException()
+        public async Task UpdateAddressByIdAsync_AddressNotFound_ThrowsException()
         {
             // Arrange
             var addressToUpdate = new Address("41C", "Asemakatu", "Pori", "Finland", "61200", "4198767000", "John", "Mull", "K-market", user.Id);
@@ -43,11 +44,11 @@ namespace Server.Test.src.Service
             var addressService = new AddressService(mockAddressRepo.Object);
 
             // Act + Assert
-            await Assert.ThrowsAsync<ResourceNotFoundException>(() => addressService.UpdateAddressByIdAsync(addressId, addressUpdateDto));
+            await Assert.ThrowsAsync<CustomException>(() => addressService.UpdateAddressByIdAsync(addressId, addressUpdateDto));
         }
 
         [Fact]
-        public async Task DeleteAddressByIdAsync_AddressNotFound_ThrowsResourceNotFoundException()
+        public async Task DeleteAddressByIdAsync_AddressNotFound_ThrowsException()
         {
             // Arrange
             var addressId = Guid.NewGuid();
@@ -56,18 +57,18 @@ namespace Server.Test.src.Service
             var addressService = new AddressService(mockAddressRepo.Object);
 
             // Act + Assert
-            await Assert.ThrowsAsync<ResourceNotFoundException>(() => addressService.DeleteAddressByIdAsync(addressId));
+            await Assert.ThrowsAsync<CustomException>(() => addressService.DeleteAddressByIdAsync(addressId));
         }
 
         [Fact]
-        public async Task GetDefaultAddressAsync_UserHasNoDefaultAddress_ThrowsResourceNotFoundException()
+        public async Task GetDefaultAddressAsync_UserHasNoDefaultAddress_ThrowsRException()
         {
             // Arrange
             var mockAddressRepo = new Mock<IAddressRepo>();
             var userService = new AddressService(mockAddressRepo.Object);
 
             // Act + Assert
-            await Assert.ThrowsAsync<ResourceNotFoundException>(() => userService.GetDefaultAddressAsync(user.Id));
+            await Assert.ThrowsAsync<CustomException>(() => userService.GetDefaultAddressAsync(user.Id));
         }
         [Fact]
         public async Task GetDefaultAddressAsync_UserHasDefaultAddress_ReturnsAddressReadDto()
@@ -132,7 +133,7 @@ namespace Server.Test.src.Service
             Assert.True(result);
         }
         [Fact]
-        public async Task DeleteAddressByIdAsync_InvalidId_ThrowsResourceNotFoundException()
+        public async Task DeleteAddressByIdAsync_InvalidId_ThrowsException()
         {
             // Arrange
             var invalidAddressId = Guid.NewGuid(); // Provide an invalid address ID
@@ -141,7 +142,7 @@ namespace Server.Test.src.Service
             var addressService = new AddressService(mockAddressRepo.Object);
 
             // Act + Assert
-            await Assert.ThrowsAsync<ResourceNotFoundException>(() => addressService.DeleteAddressByIdAsync(invalidAddressId));
+            await Assert.ThrowsAsync<CustomException>(() => addressService.DeleteAddressByIdAsync(invalidAddressId));
         }
         [Fact]
         public async Task GetAddressByIdAsync_ValidId_ReturnsAddressReadDto()
@@ -161,7 +162,7 @@ namespace Server.Test.src.Service
             Assert.Equal(address.Postcode, result.Postcode);
         }
         [Fact]
-        public async Task GetAddressByIdAsync_InvalidId_ThrowsResourceNotFoundException()
+        public async Task GetAddressByIdAsync_InvalidId_ThrowsdException()
         {
             // Arrange
             var invalidAddressId = Guid.NewGuid(); // Provide an invalid address ID
@@ -170,7 +171,7 @@ namespace Server.Test.src.Service
             var addressService = new AddressService(mockAddressRepo.Object);
 
             // Act + Assert
-            await Assert.ThrowsAsync<ResourceNotFoundException>(() => addressService.GetAddressByIdAsync(invalidAddressId));
+            await Assert.ThrowsAsync<CustomException>(() => addressService.GetAddressByIdAsync(invalidAddressId));
         }
 
 

@@ -5,12 +5,13 @@ using Server.Core.src.RepoAbstract;
 using Server.Infrastructure.src.Database;
 using Server.Service.src.DTO;
 using Server.Service.src.ServiceImplement.EntityServiceImplement;
+using Server.Service.src.Shared;
 
 namespace Server.Test.src.Service
 {
     public class WishlistServiceTests
     {
-        private readonly User user = SeedingData.GetUsers()[0];
+        private readonly User user = new Mock<User>("username", "email", "password").Object;
         [Fact]
         public async Task CreateWishlistAsync_ValidWishlist_ReturnsWishlistReadDto()
         {
@@ -38,7 +39,7 @@ namespace Server.Test.src.Service
             var wishlistService = new WishlistService(mockWishlistRepo.Object);
 
             // Act + Assert
-            await Assert.ThrowsAsync<ResourceNotFoundException>(() => wishlistService.GetWishlistByIdAsync(invalidWishlistId));
+            await Assert.ThrowsAsync<CustomException>(() => wishlistService.GetWishlistByIdAsync(invalidWishlistId));
         }
         [Fact]
         public async Task GetWishlistByUserAsync_ValidUser_ReturnsListOfWishlistReadDto()
@@ -71,13 +72,13 @@ namespace Server.Test.src.Service
         {
             // Arrange
             var invalidWishlistId = Guid.NewGuid(); // Provide an invalid wishlist ID
-            var invalidWishlistUpdateDto = new WishlistUpdateDto(invalidWishlistId, "Updated Wishlist Name"); // Provide updated wishlist data
+            var invalidWishlistUpdateDto = new WishlistUpdateDto("Updated Wishlist Name"); // Provide updated wishlist data
             var mockWishlistRepo = new Mock<IWishlistRepo>();
             mockWishlistRepo.Setup(repo => repo.GetWishlistByIdAsync(invalidWishlistId)).ReturnsAsync((Wishlist)null); // Simulate wishlist not found
             var wishlistService = new WishlistService(mockWishlistRepo.Object);
 
             // Act + Assert
-            await Assert.ThrowsAsync<ResourceNotFoundException>(() => wishlistService.UpdateWishlistByIdAsync(invalidWishlistUpdateDto));
+            await Assert.ThrowsAsync<CustomException>(() => wishlistService.UpdateWishlistByIdAsync(invalidWishlistId, invalidWishlistUpdateDto));
         }
 
         [Fact]

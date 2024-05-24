@@ -7,10 +7,10 @@ using Server.Service.src.DTO;
 
 namespace Server.Test.src.Service.Data;
 
-public class ReviewServiceTestData : TheoryData<UpdateReviewsDTO>
+public class ReviewServiceTestData : TheoryData<UpdateReviewsDto>
 {
     public ReviewServiceTestData()
     {
-        Add(new UpdateReviewsDTO(3.0, "Okayish product"));
+        Add(new UpdateReviewsDto(3.0, "Okayish product"));
     }
 }

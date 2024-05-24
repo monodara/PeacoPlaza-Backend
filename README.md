@@ -1,4 +1,4 @@
-# Fullstack Project
+# PeacoPlaza Online Shop
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-v.4-green)
 ![SASS](https://img.shields.io/badge/SASS-v.4-hotpink)
@@ -8,7 +8,8 @@
 ![EF Core](https://img.shields.io/badge/EF%20Core-v.8-cyan)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-v.16-drakblue)
 
-This project involves creating a Fullstack project with React and Redux in the frontend and ASP.NET Core 7 in the backend. The goal is to provide a seamless experience for users, along with robust management system for administrators.
+This web application is developed by 
+ project involves in creating a Fullstack system with React and Redux in the frontend, ASP.NET Core 8 in the backend and PostgreSql for data storage. The goal is to provide a seamless experience for users, along with robust management system for administrators.
 
 - Frontend: SASS, TypeScript, React, Redux Toolkit
 - Backend: ASP.NET Core, Entity Framework Core, PostgreSQL

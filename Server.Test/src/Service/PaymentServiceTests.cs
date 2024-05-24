@@ -17,7 +17,7 @@ public class PaymentServiceTests
     public async void CreatePaymentOfOrder_ReturnsPaymentInfo()
     {
         var orderId = Guid.NewGuid();
-        var createPayment = new CreatePaymentDTO(orderId, PaymentMethod.creditcard);
+        var createPayment = new CreatePaymentDto(orderId, PaymentMethod.creditcard);
         var payment = createPayment.CreatePayment();
 
         _mockPaymentRepo.Setup(x => x.CreatePaymentOfOrder(It.IsAny<Payment>())).ReturnsAsync(payment);

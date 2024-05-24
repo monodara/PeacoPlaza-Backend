@@ -43,27 +43,27 @@ public class AppDbContext : DbContext
             entity.HasOne(u => u.Avatar)
             .WithOne(a => a.User)
             .HasForeignKey<Avatar>(a => a.UserId);
-            entity.HasData(SeedingData.Users);
+            // entity.HasData(SeedingData.Users);
         });
         // -----------------------------------------------------------------------------------------------
         modelBuilder.Entity<Category>(e =>
             {
-                e.HasData(SeedingData.GetCategories());
+                // e.HasData(SeedingData.GetCategories());
                 e.HasIndex(e => e.Name).IsUnique();
             });
         // -----------------------------------------------------------------------------------------------
         modelBuilder.Entity<Product>(e =>
         {
-            e.HasData(SeedingData.Products);
+            // e.HasData(SeedingData.Products);
             e.HasIndex(p => p.Title).IsUnique();
-            e.HasCheckConstraint("CK_Product_Inventory", "[Inventory] > 0");
-            e.HasCheckConstraint("CK_Product_Price", "[Price] > 0");
-            e.HasCheckConstraint("CK_Product_Weight", "[Weight] > 0");
+            e.HasCheckConstraint("CK_Product_Inventory", "Inventory > 0");
+            e.HasCheckConstraint("CK_Product_Price", "Price > 0");
+            e.HasCheckConstraint("CK_Product_Weight", "Weight > 0");
         });
         // -----------------------------------------------------------------------------------------------
         modelBuilder.Entity<ProductImage>(e =>
         {
-            e.HasData(SeedingData.GetProductImages());
+            // e.HasData(SeedingData.GetProductImages());
         });
         // -----------------------------------------------------------------------------------------------
         modelBuilder.Entity<ReviewImage>(entity =>
@@ -74,27 +74,27 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Wishlist>(entity =>
         {
             entity.HasIndex(wl => new { wl.Name, wl.UserId }).IsUnique();
-            entity.HasData(SeedingData.Wishlists);
+            // entity.HasData(SeedingData.Wishlists);
         });
         // -----------------------------------------------------------------------------------------------
         modelBuilder.Entity<WishlistItem>(entity =>
         {
-            entity.HasData(SeedingData.GetWishlistItems());
+            // entity.HasData(SeedingData.GetWishlistItems());
         });
         // -----------------------------------------------------------------------------------------------
         modelBuilder.Entity<Address>(entity =>
         {
-            entity.HasData(SeedingData.Addresses);
+            // entity.HasData(SeedingData.Addresses);
         });
         // -----------------------------------------------------------------------------------------------
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasData(SeedingData.Orders);
+            // entity.HasData(SeedingData.Orders);
         });
         // -----------------------------------------------------------------------------------------------
         modelBuilder.Entity<OrderProduct>(entity =>
         {
-            entity.HasData(SeedingData.OrderProducts);
+            // entity.HasData(SeedingData.OrderProducts);
         });
         modelBuilder.Entity<OrderProduct>()
             .HasOne(op => op.Order)

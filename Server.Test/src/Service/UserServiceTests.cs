@@ -5,31 +5,37 @@ using Server.Core.src.RepoAbstract;
 using Server.Service.src.DTO;
 using Server.Service.src.ServiceAbstract.AuthServiceAbstract;
 using Server.Service.src.ServiceImplement.EntityServiceImplement;
+using Server.Service.src.Shared;
 using Xunit;
 
 namespace Server.Test.src.Service
 {
     public class UserServiceTests
     {
+        private readonly Mock<IUserRepo> _mockUserRepo;
         private readonly Mock<IPasswordService> _mockPwdService;
+        private readonly UserService _userService;
         public UserServiceTests()
         {
+            _mockUserRepo = new Mock<IUserRepo>();
             _mockPwdService = new Mock<IPasswordService>();
+            _userService = new UserService(_mockUserRepo.Object, _mockPwdService.Object);
         }
 
         [Fact]
-        public async Task CreateCustomerAsync_EmailNotAvailable_ThrowsValidationException()
+        public async Task CreateCustomerAsync_EmailAlreadyRegistered_ThrowsBadRequestException()
         {
             // Arrange
-            var mockUserRepo = new Mock<IUserRepo>();
-            mockUserRepo.Setup(repo => repo.CheckEmailAsync(It.IsAny<string>())).ReturnsAsync(false);
-            var userService = new UserService(mockUserRepo.Object, _mockPwdService.Object);
-            var userCreateDto = new Mock<UserCreateDto>("test", "test@example.com", "password");
+            var userCreateDto = new UserCreateDto("testuser", "test@gmail.com","password");
+                
+            _mockUserRepo.Setup(repo => repo.CheckEmailAsync(It.IsAny<string>())).ReturnsAsync(false);
 
-            // Act + Assert
-            await Assert.ThrowsAsync<ValidationException>(() => userService.CreateCustomerAsync(userCreateDto.Object));
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<CustomException>(() => _userService.CreateCustomerAsync(userCreateDto));
+            Assert.Equal("Email has been registered. Maybe try to login...", exception.Message);
+
+            _mockUserRepo.Verify(repo => repo.CheckEmailAsync(It.IsAny<string>()), Times.Once);
         }
-
         [Fact]
         public async Task CreateCustomerAsync_EmailAvailable_CreatesUser()
         {
@@ -65,7 +71,7 @@ namespace Server.Test.src.Service
         }
 
         [Fact]
-        public async Task DeleteUserByIdAsync_UserNotExists_ThrowsResourceNotFoundException()
+        public async Task DeleteUserByIdAsync_UserNotExists_ThrowsException()
         {
             // Arrange
             var userId = Guid.NewGuid();
@@ -74,7 +80,7 @@ namespace Server.Test.src.Service
             var userService = new UserService(mockUserRepo.Object, _mockPwdService.Object);
 
             // Act + Assert
-            await Assert.ThrowsAsync<ResourceNotFoundException>(() => userService.DeleteUserByIdAsync(userId));
+            await Assert.ThrowsAsync<CustomException>(() => userService.DeleteUserByIdAsync(userId));
         }
 
         [Fact]
@@ -94,7 +100,7 @@ namespace Server.Test.src.Service
             Assert.Equal(users.Count, result.Count());
         }
         [Fact]
-        public async Task GetUserByIdAsync_UserNotFound_ThrowsResourceNotFoundException()
+        public async Task GetUserByIdAsync_UserNotFound_ThrowsRException()
         {
             // Arrange
             var userId = Guid.NewGuid();
@@ -103,7 +109,7 @@ namespace Server.Test.src.Service
             var userService = new UserService(mockUserRepo.Object, _mockPwdService.Object);
 
             // Act + Assert
-            await Assert.ThrowsAsync<ResourceNotFoundException>(() => userService.GetUserByIdAsync(userId));
+            await Assert.ThrowsAsync<CustomException>(() => userService.GetUserByIdAsync(userId));
         }
         [Fact]
         public async Task GetUserByIdAsync_UserFound_ReturnsUserReadDto()
@@ -124,7 +130,7 @@ namespace Server.Test.src.Service
         }
 
         [Fact]
-        public async Task UpdateUserByIdAsync_UserNotFound_ThrowsResourceNotFoundException()
+        public async Task UpdateUserByIdAsync_UserNotFound_ThrowsException()
         {
             // Arrange
             var userId = Guid.NewGuid();
@@ -134,7 +140,7 @@ namespace Server.Test.src.Service
             var userService = new UserService(mockUserRepo.Object, _mockPwdService.Object);
 
             // Act + Assert
-            await Assert.ThrowsAsync<ResourceNotFoundException>(() => userService.UpdateUserByIdAsync(userId,userUpdateDto));
+            await Assert.ThrowsAsync<CustomException>(() => userService.UpdateUserByIdAsync(userId,userUpdateDto));
         }
 
         [Fact]
@@ -173,7 +179,7 @@ namespace Server.Test.src.Service
             var userService = new UserService(mockUserRepo.Object, _mockPwdService.Object);
 
             // Act + Assert
-            await Assert.ThrowsAsync<ResourceNotFoundException>(() => userService.ChangePassword(userId, newPassword));
+            await Assert.ThrowsAsync<CustomException>(() => userService.ChangePasswordAsync(userId, newPassword));
         }
         [Fact]
         public async Task ChangePassword_ChangeFailed_ReturnsFalse()
@@ -188,7 +194,7 @@ namespace Server.Test.src.Service
             var userService = new UserService(mockUserRepo.Object, _mockPwdService.Object);
 
             // Act
-            var result = await userService.ChangePassword(userId, newPassword);
+            var result = await userService.ChangePasswordAsync(userId, newPassword);
 
             // Assert
             Assert.False(result);
@@ -207,7 +213,7 @@ namespace Server.Test.src.Service
             var userService = new UserService(mockUserRepo.Object, _mockPwdService.Object);
 
             // Act
-            var result = await userService.ChangePassword(userId, newPassword);
+            var result = await userService.ChangePasswordAsync(userId, newPassword);
 
             // Assert
             // Verify that GetUserByIdAsync is invoked with the correct user ID

@@ -39,7 +39,7 @@ builder.Services.AddHttpContextAccessor();
 // Add logging configuration
 builder.Logging.AddConsole();
 
-var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("DbConn"));
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("Remote"));
 dataSourceBuilder.MapEnum<Role>();
 dataSourceBuilder.MapEnum<Status>();
 dataSourceBuilder.MapEnum<PaymentMethod>();
