@@ -8,92 +8,168 @@
 ![EF Core](https://img.shields.io/badge/EF%20Core-v.8-cyan)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-v.16-drakblue)
 
-This web application is developed by 
- project involves in creating a Fullstack system with React and Redux in the frontend, ASP.NET Core 8 in the backend and PostgreSql for data storage. The goal is to provide a seamless experience for users, along with robust management system for administrators.
+PeacoPlaza is an e-commerce website developed as a full-stack project. The backend is build using `C#/ASP.NET 8`, `React & Typescript` primarily facilitating the frontend, and `PostgreSQL` supporting data storage.
 
-- Frontend: SASS, TypeScript, React, Redux Toolkit
-- Backend: ASP.NET Core, Entity Framework Core, PostgreSQL
+The system allows users to browse products, filter and sort by their preference, create account if they intend to make orders, and also provide a platform for administrative roles to manage users, products and orders.
 
-You can follow the same topics as your backend project or choose the alternative one, between E-commerce and Library. You can reuse the previous frontend project, with necessary modification to fit your backend server.
+The project is deployed on [https://peacoplaza.azurewebsites.net/]. Here are its frontend deployed project[https://monodara.github.io/PeacoPlaza-Frontend/] and its repository[https://github.com/monodara/PeacoPlaza-Frontend]
+This web application is developed by
+project involves in creating a Fullstack system with React and Redux in the frontend, ASP.NET Core 8 in the backend and PostgreSql for data storage.
 
 ## Table of Contents
 
-1. [Instruction](#instruction)
-2. [Features](#features)
-   - [Mandatory features](#mandatory-features)
-   - [Extra features](#extra-features)
-3. [Requirements](#requirements)
-4. [Getting Started](#getting-started)
-5. [Testing](#testing)
+1. [Introduction](#introduction)
+2. [Technologies](#fTechnologies)
+3. [Getting Started](#getting-started)
+4. [Architecture & code structure](#ArchitectureandFolderStructure)
 
-## Instruction
+## Introduction
 
-This repository should be used only for backend server. The frontend server should be done in a separate repository [here](https://github.com/Integrify-Finland/fs17-Frontend-project). You can modify your previous frontend project and instructors will check the submissions (pull requests) in the frontend project repository. The modified frontend server need to be connected with this backend server to make a whole fullstack project.
+This repository is the codebase for backend server, which built as a .Net/Core solution.
 
-### Frontend
+## Technologies
 
-If you only modify the previoud frontend project, you can work on the same repository and there is no need to open new pull request. However, you can get back to your previous pull request and remove all the labels. In case you want to make new project from scratch, you can fork and clone the original repository and open new pullrequest for your new frontend.
-
-### Backend
-
-Generate a solution file in this repository. All the project layers of backend server should be added into this solution.
-
-## Features
-
-### Mandatory features
-
-#### User Functionalities
-
-1. User Management: Users should be able to register for an account and manage their profile.
-2. Browse Products: Users should be able to view all available products and single product, search and sort products.
-3. Add to Cart: Users should be able to add products to a shopping cart, and manage cart.
-4. Oders: Users should be able to place orders and see the history of their orders.
-
-#### Admin Functionalities
-
-1. User Management: Admins should be able to manage all users.
-2. Product Management: Admins should be able to manage all products.
-3. Order Management: Admins should be able to manage all orders.
-
-### Bonus-point 
-
-1. Third party integrations, for example: Google Authentication, Sending Email, Payment gateway, etc.
-2. Extra features, for examples: dynamic pricing algorithms, chatbots, subscription, admin dashboard with analytics, etc.
-
-## Requirements
-
-1. Project should use CLEAN architecture, proper naming convention, security, and comply with Rest API. In README file, explain the structure of your project as well.
-2. Error handler: This will ensure any exceptions thrown in your application are handled appropriately and helpful error messages are returned.
-3. In backend server, unit testing (xunit) should be done, at least for Service(Use case) layer. We recommend to test entities, repositories and controllers as well.
-4. Document with Swagger: Make sure to annotate your API endpoints and generate a Swagger UI for easier testing and documentation.
-5. `README` file should sufficiently describe the project, as well as the deployment, link to frontend github.
-6. Frontend, backend, and database servers need to be available in the live servers.  
+- **Backend**:
+  - ASP.NET Core
+  - Entity Framework Core
+  - PostgreSQL
+  - Token service for authentication
+  - role-based and resource-based authorisation
+- **Testing**:
+  - XUnit and Moq for unit tests
+  - SwaggerUI for API testing
+- **Deployment**:
+  - Azure
 
 ## Getting Started
 
-1. Start with backend first before moving to frontend.
-2. In the backend, here is the recommended order:
+1. Open your terminal and clone the front-end repository with the following command:
 
-   - Plan Your Database Schema before start coding
+```
+git clone
+```
 
-   - Set Up the Project Structure
+3. Navigate the infrastructure layer
 
-   - Build the models
+```
+  cd Server.Infrastructure
+```
 
-   - Create the Repositories
+4. Set up PostgreSQL database connection in `appsettings.json` file by replacing values of `Host`, `Database` , `Username` and `password`.
+5. In `appsettings.json` file, set up your `JwtKey` for token generating, and the name of `Issuer`.
 
-   - Build the Services
+6. Try to build the application by run `dotnet build`
+7. User `dotnet ef` commands to build the database
 
-   - Set Up Authentication & Authorization
+```
+dotnet ef migrations add CreateDb
+dotnet ef database update // push changes to database
+```
+8. Start the server by `dotnet watch` (Remember locate yourself in Infrastructure layer.)
 
-   - Build the Controllers
+## Architecture and folder structure
+The development followed `CLEAN` architecture to minimarize dependency.  
+- **Core Layer** : Also known as Domain layer , houses all the Entities, Aggregate, ValueObjects & interfaces for the Repository.
 
-   - Implement Error Handling Middleware
+- **Service Layer** : Commonly known as Business layer is responsible for all validations, Data Transformations & Mapping. It houses DTO,Service Interfaces & their implementation including the Authentication Service.
 
-3. You should focus on the mandatory features first. Make sure you have minimal working project before opting for advanced functionalities.
+- **Controller Layer** : This layer houses the endpoints that communicates with both front and database.
 
-Testing should be done along the development circle, early and regularly.
+- **Infrastructure Layer** : Also known as Web API layer serves the entry point of the application. Contains the program.cs files, Migrations, DbContext, Middleware,Services only the external ones, like Token Serviec, Sms service etc and Repository Implementation.
 
-## Testing
+- **Tests** : It is not any layer technically and is not part of the architecture. But to know the application better you can run the tests and check the results.
 
-Unit testing, and optionally integration testing, must be included for both frontend and backend code. Aim for high test coverage and ensure all major functionalities are covered.
+The folder structure indicates this design. 
+```.
+├── Server
+│   ├── sln
+│   ├── Controller
+│   │   ├── Server.Controller.csproj
+│   │   └── src
+│   │       └── Controller
+│   │           ├── AuthController.cs
+│   │           ├── CategoryController.cs
+│   │           ├── OrderController.cs
+│   │           ├── ProductController.cs
+│   │           ├── UserController.cs
+│   │           └── ...
+│   ├── Server.Core
+│   │   ├── Server.Core.csproj
+│   │   └── src
+│   │       ├── Common
+│   │       │   ├── QueryOptions.cs
+│   │       │   ├── UserCredential.cs
+│   │       ├── Entity
+│   │       │   ├── BaseEntity.cs
+│   │       │   ├── Category.cs
+│   │       │   ├── Product.cs
+│   │       │   ├── ProductImage.cs
+│   │       │   └── User.cs
+│   │       │   └── ...
+│   │       ├── RepoAbstract
+│   │       │   ├── ICategoryRepo.cs
+│   │       │   ├── IOrderRepo.cs
+│   │       │   ├── IProductImageRepo.cs
+│   │       │   ├── IProductRepo.cs
+│   │       │   ├── IReviewRepo.cs
+│   │       │   └── IUserRepo.cs
+│   │       │   ├── ...
+│   │       └── ValueObject
+│   │           ├── OrderStatus.cs
+│   │           └── UserRole.cs
+                └── PaymentMethod.cs
+│   ├── Server.Service
+│   │   ├── Server.Service.csproj
+│   │   └── src
+│   │       ├── DTO
+│   │       │   ├── CategoryDto.cs
+│   │       │   ├── OrderDto.cs
+│   │       │   ├── OrderProductDto.cs
+│   │       │   ├── ProductImageDto.cs
+│   │       │   ├── ProductDto.cs
+│   │       │   └── UserDto.cs
+│   │       │   └── ...
+│   │       ├── Service
+│   │       │   ├── AuthService.cs
+│   │       │   ├── CategoryService.cs
+│   │       │   ├── OrderService.cs
+│   │       │   ├── ProductService.cs
+│   │       │   └── UserService.cs
+│   │       │   └── ....
+│   │       ├── ServiceAbstract
+│   │       │   ├── IAuthService.cs
+│   │       │   ├── ICategoryService.cs
+│   │       │   ├── IOrderService.cs
+│   │       │   ├── IPasswordService.cs
+│   │       │   ├── IProductImageService.cs
+│   │       │   ├── IProductService.cs
+│   │       │   ├── IReviewService.cs
+│   │       │   ├── ITokenService.cs
+│   │       │   └── IUserService.cs
+│   │       │   └── ...
+│   │       └── Shared
+│   ├── Server.Test
+│   │   ├── Server.Test.csproj
+│   ├── Server.Infrastructure
+│   │   ├── Server.Infrastructure.csproj
+│   │   ├── Properties
+│   │   │   └── launchSettings.json
+│   │   ├── appsettings.Development.json
+│   │   ├── appsettings.json
+│   │   └── src
+│   │       ├── Database
+│   │       |   ├── AppDbContext.cs
+│   │       │   ├── SeedingData.cs
+│   │       │   └── TimeStampInterceptor.cs
+│   │       ├── Middleware
+│   │       │   └── ExceptionHandlerMiddleware.cs
+│   │       ├── Program.cs
+│   │       └── Repo
+│   │           ├── CategoryRepo.cs
+│   │           ├── OrderRepo.cs
+│   │           ├── ProductRepo.cs
+│   │           ├── AddressRepo.cs
+│   │           └── UserRepo.cs
+|   |           |── ...
+└── README.md
+
