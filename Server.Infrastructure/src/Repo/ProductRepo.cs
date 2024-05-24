@@ -11,10 +11,14 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
 {
     private DbSet<OrderProduct> _orderProducts;
     private DbSet<Category> _categories;
+    private DbSet<ProductImage> _images;
+    private AppDbContext _context;
     public ProductRepo(AppDbContext context) : base(context)
     {
+        _context = context;
         _orderProducts = context.OrderProducts;
         _categories = context.Categories;
+        _images = context.ProductImages;
     }
 
     public override async Task<IEnumerable<Product>> GetAllAsync(QueryOptions options)
@@ -30,7 +34,6 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
         {
             filteredData = _data.Include("ProductImages").Include("Category");
         }
-
         // Apply search keyword filter if provided
         if (!string.IsNullOrEmpty(options.SearchKey))
         {
@@ -40,14 +43,12 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
         if (!string.IsNullOrEmpty(options.MinPrice))
         {
             decimal minPrice = Convert.ToDecimal(options.MinPrice);
-            Console.WriteLine(minPrice);
             filteredData = filteredData.Where(item => item.Price >= minPrice);
         }
         // Apply maximum price filter if provided
         if (!string.IsNullOrEmpty(options.MaxPrice))
         {
             decimal maxPrice = Convert.ToDecimal(options.MaxPrice);
-            Console.WriteLine(maxPrice);
             filteredData = filteredData.Where(item => item.Price <= maxPrice);
         }
 
@@ -85,7 +86,6 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
 
     public async Task<IEnumerable<Product>> GetMostPurchasedAsync(int topNumber)
     {
-        Console.WriteLine(topNumber);
         var mostPurchasedProducts = await _orderProducts
             .GroupBy(orderProduct => orderProduct.Product.Id)
             .Select(group => new
@@ -122,7 +122,7 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
         return topRatedProducts;
     }
 
-    public async Task<int> GetProductsCount(QueryOptions options)
+    public async Task<int> GetProductsCountAsync(QueryOptions options)
     {
         IQueryable<Product> filteredData;
         if (options.CategoriseBy is not null && !string.IsNullOrEmpty(options.CategoriseBy))
@@ -135,6 +135,7 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
         {
             filteredData = _data.Include("ProductImages").Include("Category");
         }
+
         // Apply minimum price filter if provided
         if (!string.IsNullOrEmpty(options.MinPrice))
         {
@@ -173,5 +174,17 @@ public class ProductRepo : BaseRepo<Product>, IProductRepo
             allSubCategoryIds.AddRange(await GetAllSubCategoryIdsAsync(subCategoryId));
         }
         return allSubCategoryIds;
+    }
+
+    public override async Task<bool> DeleteOneByIdAsync(Product deleteObject)
+    {
+        var productDeletion = await base.DeleteOneByIdAsync(deleteObject);
+        var imgList = deleteObject.ProductImages;
+        foreach (var img in imgList){
+            _images.Remove(img);
+            await _context.SaveChangesAsync();
+        }
+        return productDeletion && true;
+
     }
 }

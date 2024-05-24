@@ -11,6 +11,7 @@ namespace Server.Service.src.DTO
         public string Role { get; set; }
         public Guid DefaultAddressId { get; set; }
         public AvatarReadDto? Avatar { get; set; }
+        public DateOnly JoinedAt{ get; set; }
 
         public UserReadDto Transform(User user)
         {
@@ -19,7 +20,8 @@ namespace Server.Service.src.DTO
             Email = user.Email;
             Role = user.Role.ToString();
             DefaultAddressId = user.DefaultAddressId;
-            if(user.Avatar is not null) Avatar = new AvatarReadDto().Transform(user.Avatar);
+            JoinedAt = new DateOnly(user.CreatedAt.Year, user.CreatedAt.Month, user.CreatedAt.Day);
+            if (user.Avatar is not null) Avatar = new AvatarReadDto().Transform(user.Avatar);
             return this;
         }
     }

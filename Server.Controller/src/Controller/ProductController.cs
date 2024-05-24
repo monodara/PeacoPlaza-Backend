@@ -25,14 +25,15 @@ namespace Server.Controller.src.Controller
             return await _productServices.GetAllProductsAsync(options);
         }
         [HttpGet("count")]
-        public async Task<int> GetProductsCount([FromQuery] QueryOptions options)
+        public async Task<int> GetProductsCountAsync([FromQuery] QueryOptions options)
         {
-            return await _productServices.GetProductsCount(options);
+            var list = await _productServices.GetAllProductsAsync(options);
+            return list.Count();
         }
         [HttpGet("{id}")]
         public async Task<ProductReadDto> GetProductByIdAsync([FromRoute] Guid id)
         {
-            return await _productServices.GetProductById(id);
+            return await _productServices.GetProductByIdAsync(id);
         }
         [HttpGet("category/{categoryId}")]
         public async Task<IEnumerable<ProductReadDto>> GetAllProductsByCategoryAsync([FromRoute] Guid categoryId)
@@ -53,19 +54,19 @@ namespace Server.Controller.src.Controller
         [HttpPost]
         public async Task<ProductReadDto> CreateProductAsync([FromBody] ProductCreateDto product)
         {
-            return await _productServices.CreateProduct(product);
+            return await _productServices.CreateProductAsync(product);
         }
         [Authorize(Roles = "Admin")]
         [HttpPatch("{id}")]
         public async Task<ProductReadDto> UpdateProductAsync([FromRoute] Guid id, [FromBody] ProductUpdateDto category)
         {
-            return await _productServices.UpdateProduct(id, category);
+            return await _productServices.UpdateProductAsync(id, category);
         }
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<bool> DeleteProductAsync([FromRoute] Guid id)
         {
-            return await _productServices.DeleteProduct(id);
+            return await _productServices.DeleteProductAsync(id);
         }
     }
 

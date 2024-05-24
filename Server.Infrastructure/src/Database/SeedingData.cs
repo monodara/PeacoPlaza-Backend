@@ -60,24 +60,6 @@ public class SeedingData
 
     public static List<Product> Products = GetProducts();
 
-    // public static List<ProductImage> GetProductImages()
-    // {
-    //     var productImages = new List<ProductImage>();
-    //     var paths = new List<string> { "src/Images/fi1.jpeg", "src/Images/fi2.jpeg" };
-    //     foreach (var product in Products)
-    //     {
-    //         for (int i = 0; i < 2; i++)
-    //         {
-    //             var productImage = new ProductImage
-    //             {
-    //                 Data = File.ReadAllBytes(paths[i]),
-    //                 ProductId = product.Id
-    //             };
-    //             productImages.Add(productImage);
-    //         }
-    //     }
-    //     return productImages;
-    // }
     public static List<ProductImage> GetProductImages()
     {
         var paths = new List<string> { "src/Images/fi1.jpeg", "src/Images/fi2.jpeg" };
@@ -93,7 +75,6 @@ public class SeedingData
             }
             catch (Exception e)
             {
-                Console.WriteLine($"error reading file {path}, error: {e.Message}");
             }
         }
 
@@ -116,7 +97,6 @@ public class SeedingData
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"{ex.Message}");
                 }
             }
         }

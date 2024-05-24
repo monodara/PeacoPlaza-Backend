@@ -32,6 +32,16 @@ namespace Server.Controller.src.Controller
             return await _addressService.GetAddressesByUserAsync(userId, options);
         }
         [Authorize]
+        [HttpGet("count")]
+        public async Task<int> GetAddressesCountAsync([FromQuery] QueryOptions options)
+        {
+            var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
+            var userId = Guid.Parse(userClaims);
+            var addresses = await _addressService.GetAddressesByUserAsync(userId, options);
+            return addresses.Count();
+        }
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<AddressReadDto> GetAddressByIdAsync([FromRoute] Guid id)
         {

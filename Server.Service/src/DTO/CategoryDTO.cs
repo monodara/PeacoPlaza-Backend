@@ -8,12 +8,13 @@ public class CategoryReadDto : BaseEntity
     public string Name { get; set; }
     public string Image { get; set; }
     public Guid? ParentCategoryId { get; set; }
-    public void Transform(Category category)
+    public CategoryReadDto Transform(Category category)
     {
         Id = category.Id;
         Name = category.Name;
         Image = category.Image;
         ParentCategoryId = category.ParentCategoryId;
+        return this;
     }
 }
 

@@ -22,13 +22,13 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             _categoryRepo = categoryRepo;
         }
 
-        public async Task<ProductReadDto> CreateProduct(ProductCreateDto product)
+        public async Task<ProductReadDto> CreateProductAsync(ProductCreateDto product)
         {
             var result = await _productRepo.CreateOneAsync(_mapper.Map<ProductCreateDto, Product>(product));
             return _mapper.Map<Product, ProductReadDto>(result);
         }
 
-        public async Task<bool> DeleteProduct(Guid id)
+        public async Task<bool> DeleteProductAsync(Guid id)
         {
             var foundItem = await _productRepo.GetOneByIdAsync(id);
             if (foundItem is not null)
@@ -69,13 +69,13 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             return result.Select(p => new ProductReadDto().Transform(p));
         }
 
-        public async Task<ProductReadDto> GetProductById(Guid id)
+        public async Task<ProductReadDto> GetProductByIdAsync(Guid id)
         {
             var result = await _productRepo.GetOneByIdAsync(id);
             return new ProductReadDto().Transform(result);
         }
 
-        public async Task<ProductReadDto> UpdateProduct(Guid id, ProductUpdateDto product)
+        public async Task<ProductReadDto> UpdateProductAsync(Guid id, ProductUpdateDto product)
         {
             var foundItem = await _productRepo.GetOneByIdAsync(id);
             if (foundItem is not null)
@@ -109,9 +109,9 @@ namespace Server.Service.src.ServiceImplement.EntityServiceImplement
             return result.Select(p => new ProductReadDto().Transform(p));
         }
 
-        public async Task<int> GetProductsCount(QueryOptions options)
+        public async Task<int> GetProductsCountAsync(QueryOptions options)
         {
-            return await _productRepo.GetProductsCount(options);
+            return await _productRepo.GetProductsCountAsync(options);
         }
     }
 }

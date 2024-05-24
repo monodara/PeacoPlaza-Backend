@@ -21,9 +21,7 @@ public class ProductReadDto
         ProductImages = product.ProductImages.Select(img=>new ProductImageReadDto().Transform(img)).ToList();
         Inventory = product.Inventory;
         Weight = product.Weight;
-        var categoryReadDto = new CategoryReadDto();
-        categoryReadDto.Transform(product.Category);
-        Category = categoryReadDto;
+        Category = new CategoryReadDto().Transform(product.Category);
         return this;
     }
 }

@@ -22,7 +22,6 @@ namespace Server.Controller.src.Controller
         [HttpGet("product/{productId}")]
         public async Task<IEnumerable<ProductImageReadDto>> GetAllProductImagesAsync([FromRoute] Guid productId)
         {
-            Console.WriteLine(productId);
             return await _productImageService.GetAllProductImagesAsync(productId);
         }
 

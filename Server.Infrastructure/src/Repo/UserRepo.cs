@@ -77,8 +77,8 @@ namespace Server.Infrastructure.src.Repo
             {
                 switch (options.SortBy.Value)
                 {
-                    case SortType.ByName:
-                        query = options.OrderBy.Value == SortOrder.Ascending ? query.OrderBy(u => u.UserName) : query.OrderByDescending(u => u.UserName);
+                    case SortType.ByDate:
+                        query = options.OrderBy.Value == SortOrder.Ascending ? query.OrderBy(u => u.CreatedAt) : query.OrderByDescending(u => u.CreatedAt);
                         break;
                 }
             }
@@ -144,6 +144,7 @@ namespace Server.Infrastructure.src.Repo
                 // update avatarId in user table
                 var user = await GetUserByIdAsync(userId);
                 user.AvatarId = avatar.Id;
+                await UpdateUserByIdAsync(user);
                 _context.Users.Update(user);
 
                 await _context.SaveChangesAsync();

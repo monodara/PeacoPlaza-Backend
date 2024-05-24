@@ -13,17 +13,14 @@ namespace Server.Controller.src.Controller;
 public class OrderController : ControllerBase
 {
     private readonly IOrderService _orderService;
-    // private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IAuthorizationService _authorizationService;
 
     public OrderController(IOrderService orderService, IAuthorizationService authorizationService)
     {
         _orderService = orderService;
         _authorizationService = authorizationService;
-        // _httpContextAccessor = httpContextAccessor;
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<IEnumerable<OrderReadDto>> GetAllOrdersAsync([FromQuery] QueryOptions options)
     {
@@ -31,6 +28,16 @@ public class OrderController : ControllerBase
         if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
         var userId = Guid.Parse(userClaims);
         return await _orderService.GetAllOrdersAsync(options, userId);
+    }
+    [Authorize]
+    [HttpGet("count")]
+    public async Task<int> GetOrderCount([FromQuery] QueryOptions options)
+    {
+        var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");
+        var userId = Guid.Parse(userClaims);
+        var orders =  await _orderService.GetAllOrdersAsync(options, userId);
+        return orders.Count();
     }
 
     // [Authorize(Roles = "Admin")]
@@ -56,7 +63,7 @@ public class OrderController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<OrderReadDto> CreateOrderAsync([FromBody] OrderCreateDto order)
+    public async Task<bool> CreateOrderAsync([FromBody] OrderCreateDto order)
     {
         var userClaims = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userClaims == null) throw new InvalidOperationException("Please login to use this facility!");

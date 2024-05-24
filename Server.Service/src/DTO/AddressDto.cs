@@ -4,6 +4,7 @@ namespace Server.Service.src.DTO
 {
     public class AddressReadDto
     {
+        public Guid Id { get; set; }
         public string AddressLine { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
@@ -18,6 +19,7 @@ namespace Server.Service.src.DTO
 
         public AddressReadDto Transform(Address address)
         {
+            Id = address.Id;
             FirstName = address.FirstName;
             LastName = address.LastName;
             Street = address.Street;

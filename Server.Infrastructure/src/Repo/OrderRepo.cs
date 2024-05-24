@@ -24,7 +24,7 @@ public class OrderRepo : IOrderRepo
         _orderproducts = context.OrderProducts;
     }
 
-    public async Task<Order> CreateOrderAsync(Order order)
+    public async Task<bool> CreateOrderAsync(Order order)
     {
         using (var transaction = await _context.Database.BeginTransactionAsync())
         {
@@ -32,16 +32,18 @@ public class OrderRepo : IOrderRepo
             {
                 foreach (var orderProduct in order.OrderProducts)
                 {
-                    var foundProduct = await _products.FindAsync(orderProduct.ProductId);
+                    var foundProduct = await  _products.FirstOrDefaultAsync((p)=>p.Id == orderProduct.ProductId);
+                    if (foundProduct == null){
+                    }
                     orderProduct.OrderId = order.Id;
-                    Console.WriteLine(order.Id);
+                    orderProduct.Product = foundProduct;
                     await _orderproducts.AddAsync(orderProduct);
                     foundProduct.Inventory -= orderProduct.Quantity;
                 }
                 await _orders.AddAsync(order);
-                await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
-                return order;
+                await _context.SaveChangesAsync();
+                return true;
             }
             catch (DbUpdateException)
             {
@@ -72,8 +74,8 @@ public class OrderRepo : IOrderRepo
         var userRole = _context.Users.FirstOrDefault(u => u.Id == userId)!.Role;
         // var query = _context.Orders.Include("OrderProducts.Product");
         IQueryable<Order> query = _context.Orders
-    .Include(o => o.OrderProducts)
-        .ThenInclude(op => op.Product);
+    .Include("OrderProducts");
+        // .ThenInclude(op => op.Product);
         if (userRole == Role.Admin)
         {
             var orders = query
@@ -85,7 +87,6 @@ public class OrderRepo : IOrderRepo
         }
         else
         {
-            Console.WriteLine(userId);
             var orders = query
                         .Where(o => o.UserId == userId)
                         .OrderByDescending(o => o.OrderDate)
@@ -103,7 +104,7 @@ public class OrderRepo : IOrderRepo
 
     public async Task<Order> GetOrderByIdAsync(Guid orderId)
     {
-        return await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+        return await _context.Orders.Include("OrderProducts").FirstOrDefaultAsync(o => o.Id == orderId);
     }
 
     public async Task<bool> UpdateOrderByIdAsync(Guid orderId, Order order)

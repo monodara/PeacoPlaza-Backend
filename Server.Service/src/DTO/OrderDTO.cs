@@ -8,46 +8,41 @@ public class OrderReadDto
 {
     public Guid Id { get; set; }
     public DateTime OrderDate { get; set; }
-    public Status Status { get; set; }
+    public string Status { get; set; }
     public Guid UserId { get; set; }
     public DateTime? DateOfDelivery { get; set; }
     public IEnumerable<OrderProductReadDto> OrderProducts { get; set; }
 
-    public OrderReadDto ReadOrder(Order order)
+    public OrderReadDto Transform(Order order)
     {
-        return new OrderReadDto
+        Id = order.Id;
+        OrderDate = order.OrderDate;
+        Status = order.Status.ToString();
+        UserId = order.UserId;
+        DateOfDelivery = order.DateOfDelivery;
+        if (order.OrderProducts != null)
         {
-            Id = order.Id,
-            OrderDate = order.OrderDate,
-            Status = order.Status,
-            UserId = order.UserId,
-            DateOfDelivery = order.DateOfDelivery,
-            OrderProducts = order.OrderProducts.Select(op => new OrderProductReadDto
-            {
-                Product = new ProductReadDto
-                {
-                    Title = op.Product.Title,
-                    Price = op.Product.Price,
-                    // ProductImages = op.Product.ProductImages.Select(pi => new ProductImageReadDto { /* map properties */ })
-                },
-                Quantity = op.Quantity
-            })
-        };
+            OrderProducts = order.OrderProducts.Select(op => new OrderProductReadDto().Transform(op)).ToList();
+        }
+        else
+        {
+            OrderProducts = new List<OrderProductReadDto>();
+        }
+        return this;
     }
 }
+
+
 public class OrderCreateDto
 {
     public Guid AddressId { get; set; }
-    public IEnumerable<OrderProductCreatedDto> OrderProducts { get; set; }
+    public IEnumerable<OrderProductCreateDto> OrderProducts { get; set; }
 
     public Order CreateOrder()
     {
-        IEnumerable<OrderProduct> orderProducts = OrderProducts.Select(op => new OrderProduct
-        {
-            ProductId = op.ProductId,
-            Quantity = op.Quantity
-        }).ToList();
-        return new Order { AddressId = AddressId, OrderProducts = orderProducts };
+        IEnumerable<OrderProduct> orderProducts = OrderProducts.Select(op => op.CreateOrderProduct()
+        ).ToList();
+        return new Order { Id = Guid.NewGuid(), AddressId = AddressId, OrderProducts = orderProducts };
     }
 }
 public class OrderUpdateDto

@@ -5,7 +5,8 @@ namespace Server.Core.src.ValueObject
         ByTitle,
         ByPrice,
         ByName,
-        ByCity
+        ByCity,
+        ByDate,
 
     }
 }

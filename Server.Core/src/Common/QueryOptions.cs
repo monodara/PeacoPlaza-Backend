@@ -4,7 +4,7 @@ namespace Server.Core.src.Common;
 
 public class QueryOptions
 {
-    public int PageSize { get; set; } = 10;
+    public int PageSize { get; set; } = int.MaxValue;
     public int PageNo { get; set; } = 1;
     public SortType? SortBy { get; set; } = SortType.ByTitle;
     public SortOrder? OrderBy { get; set; } = SortOrder.Ascending;

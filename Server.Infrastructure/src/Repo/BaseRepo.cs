@@ -24,7 +24,7 @@ public class BaseRepo<T> : IBaseRepo<T> where T : BaseEntity
         return createObject;
     }
 
-    public async Task<bool> DeleteOneByIdAsync(T deleteObject)
+    public virtual async Task<bool> DeleteOneByIdAsync(T deleteObject)
     {
         _data.Remove(deleteObject);
         await _context.SaveChangesAsync();

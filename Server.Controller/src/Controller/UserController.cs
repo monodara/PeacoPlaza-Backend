@@ -29,6 +29,7 @@ namespace Server.Controller.src.Controller
         [HttpGet]
         public async Task<IEnumerable<UserReadDto>> GetAllUsersAsync([FromQuery] QueryOptions options)
         {
+
             if (HttpContext.User!.Identity == null || !HttpContext.User.Identity.IsAuthenticated)
             {
                 throw CustomException.UnauthorizedException("");
@@ -41,6 +42,14 @@ namespace Server.Controller.src.Controller
             }
             return await _userService.GetAllUsersAsync(options);
         }
+        [Authorize(Roles = "Admin")]
+        [HttpGet("count")]
+        public async Task<int> GetUsersCountAsync([FromQuery] QueryOptions options)
+        {
+            var list = await _userService.GetAllUsersAsync(options);
+            return list.Count();
+        }
+
         [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<UserReadDto>> GetUserByIdAsync([FromRoute] Guid id)
@@ -97,7 +106,6 @@ namespace Server.Controller.src.Controller
         [HttpPatch("{id}")]
         public async Task<UserReadDto> UpdateUserByIdAsync([FromRoute] Guid id, [FromBody] UserUpdateDto userUpdateDto)
         {
-            Console.WriteLine("id" + id);
             var userClaims = (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new InvalidOperationException("Please login to use this facility!");
             return await _userService.UpdateUserByIdAsync(id, userUpdateDto);
         }
