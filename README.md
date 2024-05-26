@@ -12,9 +12,7 @@ PeacoPlaza is an e-commerce website developed as a full-stack project. The backe
 
 The system allows users to browse products, filter and sort by their preference, create account if they intend to make orders, and also provide a platform for administrative roles to manage users, products and orders.
 
-The project is deployed on [https://peacoplaza.azurewebsites.net/]. Here are its frontend deployed project[https://monodara.github.io/PeacoPlaza-Frontend/] and its repository[https://github.com/monodara/PeacoPlaza-Frontend]
-This web application is developed by
-project involves in creating a Fullstack system with React and Redux in the frontend, ASP.NET Core 8 in the backend and PostgreSql for data storage.
+The project is deployed on [https://peacoplaza.azurewebsites.net/]. Here are its frontend deployed project[https://monodara.github.io/PeacoPlaza-Frontend/] and the corresponding repository[https://github.com/monodara/PeacoPlaza-Frontend].
 
 ## Table of Contents
 
@@ -25,7 +23,7 @@ project involves in creating a Fullstack system with React and Redux in the fron
 
 ## Introduction
 
-This repository is the codebase for backend server, which built as a .Net/Core solution.
+This repository is the codebase for backend server, which built as a .Net/Core solution. 
 
 ## Technologies
 
@@ -33,7 +31,7 @@ This repository is the codebase for backend server, which built as a .Net/Core s
   - ASP.NET Core
   - Entity Framework Core
   - PostgreSQL
-  - Token service for authentication
+  - [Pbkdf2](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.rfc2898derivebytes.pbkdf2?view=net-8.0) for authentication
   - role-based and resource-based authorisation
 - **Testing**:
   - XUnit and Moq for unit tests
@@ -43,29 +41,36 @@ This repository is the codebase for backend server, which built as a .Net/Core s
 
 ## Getting Started
 
-1. Open your terminal and clone the front-end repository with the following command:
+- To run the deployed project, click [https://peacoplaza.azurewebsites.net/]
+- To run the project locally, please follow the steps below.
+
+1. Open your terminal and clone the repository with the following command:
 
 ```
-git clone
+git clone repo-link
 ```
 
-3. Navigate the infrastructure layer
+2. Navigate the infrastructure layer
 
 ```
   cd Server.Infrastructure
 ```
 
-4. Set up PostgreSQL database connection in `appsettings.json` file by replacing values of `Host`, `Database` , `Username` and `password`.
-5. In `appsettings.json` file, set up your `JwtKey` for token generating, and the name of `Issuer`.
+3. Set up PostgreSQL database connection in `appsettings.json` file by replacing values of `Host`, `Database` , `Username` and `Password`.
+```
+"ConnectionStrings": {
+    "DbConn": "Host=localhost;Username=*replace by your username*;password=*replace by your password*;Database=*replace by your database name*,
+  },
+```
 
-6. Try to build the application by run `dotnet build`
-7. User `dotnet ef` commands to build the database
+4. Try to build the application by running `dotnet build`
+5. Use `dotnet ef` commands to build the database
 
 ```
 dotnet ef migrations add CreateDb
 dotnet ef database update // push changes to database
 ```
-8. Start the server by `dotnet watch` (Remember locate yourself in Infrastructure layer.)
+8. Start the server by `dotnet watch` (Remember to locate yourself in Infrastructure layer.)
 
 ## Architecture and folder structure
 The development followed `CLEAN` architecture to minimarize dependency.  
