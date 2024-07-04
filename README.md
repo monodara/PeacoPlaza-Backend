@@ -17,9 +17,9 @@ The project is deployed on [https://peacoplaza.azurewebsites.net/]. Here are its
 ## Table of Contents
 
 1. [Introduction](#introduction)
-2. [Technologies](#fTechnologies)
+2. [Technologies](#Technologies)
 3. [Getting Started](#getting-started)
-4. [Architecture & code structure](#ArchitectureandFolderStructure)
+4. [Architecture & code structure](#Architecture-and-Folder-Structure)
 
 ## Introduction
 
