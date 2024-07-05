@@ -12,14 +12,14 @@ PeacoPlaza is an e-commerce website developed as a full-stack project. The backe
 
 The system allows users to browse products, filter and sort by their preference, create account if they intend to make orders, and also provide a platform for administrative roles to manage users, products and orders.
 
-The project is deployed on [https://peacoplaza.azurewebsites.net/]. Here are its frontend deployed project[https://monodara.github.io/PeacoPlaza-Frontend/] and the corresponding repository[https://github.com/monodara/PeacoPlaza-Frontend].
+This repository is the backend part for the full-stack project and is deployed on [https://peacoplaza.azurewebsites.net/](https://peacoplaza.azurewebsites.net/). Here are its [frontend deployed project](https://monodara.github.io/PeacoPlaza-Frontend/) and the corresponding [repository](https://github.com/monodara/PeacoPlaza-Frontend).
 
 ## Table of Contents
 
 1. [Introduction](#introduction)
-2. [Technologies](#Technologies)
+2. [Technologies](#technologies)
 3. [Getting Started](#getting-started)
-4. [Architecture & code structure](#Architecture-and-Folder-Structure)
+4. [Architecture & code structure](#architecture-and-folder-structure)
 
 ## Introduction
 
@@ -36,40 +36,43 @@ This repository is the codebase for backend server, which built as a .Net/Core s
 - **Testing**:
   - XUnit and Moq for unit tests
   - SwaggerUI for API testing
+- **Containerization**
+  - Docker
 - **Deployment**:
   - Azure
 
 ## Getting Started
 
 - To run the deployed project, click [https://peacoplaza.azurewebsites.net/]
+- If having `Docker` installed, run `docker-compose up` and browse [http:localhost:3000](http:localhost:3000)
 - To run the project locally, please follow the steps below.
 
 1. Open your terminal and clone the repository with the following command:
-
-```
-git clone repo-link
-```
+      ```bash
+      git clone repo-link
+      ```
 
 2. Navigate the infrastructure layer
 
-```
-  cd Server.Infrastructure
-```
+    ```bash
+    cd Server.Infrastructure
+    ```
 
 3. Set up PostgreSQL database connection in `appsettings.json` file by replacing values of `Host`, `Database` , `Username` and `Password`.
-```
-"ConnectionStrings": {
-    "DbConn": "Host=localhost;Username=*replace by your username*;password=*replace by your password*;Database=*replace by your database name*,
-  },
-```
+
+    ```
+    "ConnectionStrings": {
+        "DbConn": "Host=localhost;Username=*replace by your username*;password=*replace by your password*;Database=*replace by your database name*,
+      },
+    ```
 
 4. Try to build the application by running `dotnet build`
 5. Use `dotnet ef` commands to build the database
 
-```
-dotnet ef migrations add CreateDb
-dotnet ef database update // push changes to database
-```
+    ```bash
+    dotnet ef migrations add CreateDb
+    dotnet ef database update // push changes to database
+    ```
 8. Start the server by `dotnet watch` (Remember to locate yourself in Infrastructure layer.)
 
 ## Architecture and folder structure
